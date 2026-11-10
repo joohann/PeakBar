@@ -1,17 +1,12 @@
 import AppKit
 import SwiftUI
 
-// Renders MenuView offscreen to PNG with stub data, so no screen-recording permission is needed.
+// Renders the panel offscreen to PNG with stub data, so no screen-recording permission is needed.
 // Usage: preview <path-to-.app> <output.png>
 
 struct StubProvider: ServiceStatusProviding {
     let status: ServiceStatus
     func fetch() async throws -> ServiceStatus { status }
-}
-final class StubPreferences: PreferencesStoring {
-    var showMenuBarText: Bool
-    var showMenuBarUsage = true
-    init(showMenuBarText: Bool) { self.showMenuBarText = showMenuBarText }
 }
 struct StubUsage: UsageProviding {
     let usage: Usage
@@ -20,6 +15,18 @@ struct StubUsage: UsageProviding {
 struct StubLoginItem: LoginItemManaging {
     var isEnabled: Bool { true }
     func setEnabled(_ enabled: Bool) throws {}
+}
+final class StubPreferences: PreferencesStoring {
+    var settings = AppSettings()
+    var sentWeekWarnings: Set<String> = []
+    func load() -> AppSettings { settings }
+    func save(_ s: AppSettings) { settings = s }
+}
+final class StubNotifier: NotificationPosting {
+    func requestAuthorization() async -> Bool { true }
+    func isDenied() async -> Bool { false }
+    func replaceScheduled(_ plan: [PlannedNotification], ids: [String]) {}
+    func post(_ notification: PlannedNotification) {}
 }
 /// Shifts the clock so a specific moment can be previewed.
 struct ShiftedSchedule: PeakScheduling {
@@ -61,58 +68,57 @@ func run() async {
     let ok = ServiceStatus(level: .operational, description: "All Systems Operational", incidents: [], fetchedAt: Date())
     let bad = ServiceStatus(level: .degraded, description: "Partial System Outage",
                             incidents: ["Elevated errors on Claude Opus"], fetchedAt: Date())
-
-    // Find a moment inside the next peak window for the "peak" scenario.
-    let nextPeak = base.state(at: Date()).isPeak ? Date() : base.state(at: Date()).nextChange + 2 * 3600
-    func use(_ s: Double, _ w: Double) -> Usage {
+    func use(_ s: Double, _ w: Double, daysLeft: Double) -> Usage {
         Usage(session: UsageWindow(percent: s, resetsAt: Date() + 2 * 3600),
-              week: UsageWindow(percent: w, resetsAt: Date() + 4 * 86400), plan: "max", fetchedAt: Date())
+              week: UsageWindow(percent: w, resetsAt: Date() + daysLeft * 86400), plan: "max", fetchedAt: Date())
     }
-    let scenarios: [(String, TimeInterval, ServiceStatus, Usage)] = [
-        ("off-peak", 0, ok, use(12, 18)),
-        ("peak", nextPeak.timeIntervalSinceNow, ok, use(74, 41)),
-        ("incident", nextPeak.timeIntervalSinceNow, bad, use(93, 66)),
+    let nextPeak = base.state(at: Date()).isPeak ? Date() : base.state(at: Date()).nextChange + 2 * 3600
+    let scenarios: [(TimeInterval, ServiceStatus, Usage, Bool)] = [
+        (0, ok, use(12, 18, daysLeft: 4), false),                               // on track
+        (nextPeak.timeIntervalSinceNow, ok, use(74, 68, daysLeft: 3), false),   // ahead, runs out early
+        (nextPeak.timeIntervalSinceNow, bad, use(93, 91, daysLeft: 2), false),  // critical
+        (0, ok, use(12, 18, daysLeft: 4), true),                                // settings (back)
     ]
 
     var rows: [[NSImage]] = []
     for dark in [false, true] {
         var row: [NSImage] = []
-        for (_, offset, status, usage) in scenarios {
-            let model = StatusModel(config: config,
-                                    schedule: ShiftedSchedule(base: base, offset: offset),
+        for (offset, status, usage, back) in scenarios {
+            let schedule = ShiftedSchedule(base: base, offset: offset)
+            let model = StatusModel(config: config, schedule: schedule,
                                     provider: StubProvider(status: status),
                                     usageProvider: StubUsage(usage: usage),
-                                    loginItem: StubLoginItem(),
-                                    preferences: StubPreferences(showMenuBarText: !dark))
-            try? await Task.sleep(nanoseconds: 300_000_000)  // let the stub fetch land
-            let bar = MenuBarLabel(model: model, l: localizer).padding(6)
+                                    loginItem: StubLoginItem(), preferences: StubPreferences(),
+                                    notifier: StubNotifier(),
+                                    planner: NotificationPlanner(schedule: schedule, l: localizer))
+            try? await Task.sleep(nanoseconds: 300_000_000)  // let the stub fetches land
             row.append(render(VStack(alignment: .trailing, spacing: 6) {
-                bar
-                MenuView(model: model, l: localizer)
+                MenuBarLabel(model: model, l: localizer).padding(6)
+                MenuView(model: model, l: localizer, showsSettings: back)
             }.padding(8), dark: dark))
         }
         rows.append(row)
     }
 
-    // Compose into one sheet.
+    // Compose into one sheet, top-aligned.
     let gap: CGFloat = 16
     let cellW = rows.flatMap { $0 }.map(\.size.width).max()!
-    let cellH = rows.flatMap { $0 }.map(\.size.height).max()!
-    let size = NSSize(width: gap + CGFloat(scenarios.count) * (cellW + gap), height: gap + 2 * (cellH + gap))
+    let rowH = rows.map { $0.map(\.size.height).max()! }
+    let size = NSSize(width: gap + CGFloat(scenarios.count) * (cellW + gap), height: gap + rowH.reduce(0) { $0 + $1 + gap })
     let sheet = NSImage(size: size, flipped: true) { _ in
         NSColor(white: 0.5, alpha: 1).setFill()
         NSRect(origin: .zero, size: size).fill()
+        var y = gap
         for (r, row) in rows.enumerated() {
             for (c, img) in row.enumerated() {
-                let origin = NSPoint(x: gap + CGFloat(c) * (cellW + gap), y: gap + CGFloat(r) * (cellH + gap))
-                img.draw(in: NSRect(origin: origin, size: img.size), from: .zero, operation: .sourceOver,
-                         fraction: 1, respectFlipped: true, hints: nil)
+                img.draw(in: NSRect(origin: NSPoint(x: gap + CGFloat(c) * (cellW + gap), y: y), size: img.size),
+                         from: .zero, operation: .sourceOver, fraction: 1, respectFlipped: true, hints: nil)
             }
+            y += rowH[r] + gap
         }
         return true
     }
-    let tiff = sheet.tiffRepresentation!
-    let png = NSBitmapImageRep(data: tiff)!.representation(using: .png, properties: [:])!
+    let png = NSBitmapImageRep(data: sheet.tiffRepresentation!)!.representation(using: .png, properties: [:])!
     try! png.write(to: URL(fileURLWithPath: args[2]))
     print("written", args[2], size)
 }

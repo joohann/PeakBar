@@ -3,14 +3,16 @@ import SwiftUI
 @main
 struct MenuBarApp: App {
     @StateObject private var model: StatusModel
-    private let localizer: Localizing = BundleLocalizer()
+    private let localizer: Localizing
 
     init() {
         do {
             let config = try BundleConfigLoader().load()
+            let schedule = try WeeklyPeakSchedule(config: config.peak)
+            let localizer = BundleLocalizer()
             let model = StatusModel(
                 config: config,
-                schedule: try WeeklyPeakSchedule(config: config.peak),
+                schedule: schedule,
                 provider: StatuspageClient(url: config.status.url),
                 usageProvider: OAuthUsageClient(
                     url: config.usage.url,
@@ -20,9 +22,12 @@ struct MenuBarApp: App {
                     refresher: ClaudeCLIRefresher(candidatePaths: config.usage.cliPaths)
                 ),
                 loginItem: MainAppLoginItem(),
-                preferences: UserDefaultsPreferences()
+                preferences: UserDefaultsPreferences(),
+                notifier: UserNotificationService(),
+                planner: NotificationPlanner(schedule: schedule, l: localizer)
             )
             _model = StateObject(wrappedValue: model)
+            self.localizer = localizer
         } catch {
             fatalError("Invalid config.json: \(error)")
         }

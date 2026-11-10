@@ -1,56 +1,65 @@
 import SwiftUI
 
-/// Content of the menu bar panel. Display only; all logic lives in StatusModel.
+/// The panel: a card with the status on the front and settings on the back.
 struct MenuView: View {
     @ObservedObject var model: StatusModel
     let l: Localizing
+    @State var showsSettings = false
+    @State private var angle: Double = 0
+
+    var body: some View {
+        Group {
+            if showsSettings {
+                SettingsView(model: model, l: l, onDone: flip)
+            } else {
+                StatusFront(model: model, l: l, onSettings: flip)
+            }
+        }
+        .padding(14)
+        .frame(width: 300)
+        .rotation3DEffect(.degrees(angle), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
+    }
+
+    /// Turns the card over: rotate to the edge, swap faces, rotate back in.
+    private func flip() {
+        withAnimation(.easeIn(duration: 0.12)) { angle = 90 }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            showsSettings.toggle()
+            angle = -90
+            withAnimation(.easeOut(duration: 0.12)) { angle = 0 }
+        }
+    }
+}
+
+/// Front of the card. Display only; all logic lives in StatusModel.
+struct StatusFront: View {
+    @ObservedObject var model: StatusModel
+    let l: Localizing
+    let onSettings: () -> Void
     @Environment(\.openURL) private var openURL
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            header
+            HStack(alignment: .top, spacing: 10) {
+                Image(nsImage: MenuBarIcon.image(for: model.peak.isPeak ? .peak : .offPeak))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(l.t(model.peak.isPeak ? "state.peak" : "state.offpeak")).font(.headline)
+                    Text(l.t(model.peak.isPeak ? "detail.peak" : "detail.offpeak"))
+                        .font(.callout).foregroundStyle(.secondary)
+                    Text(countdownText).font(.callout.monospacedDigit())
+                }
+                Spacer(minLength: 0)
+                HStack(spacing: 2) {
+                    IconButton(symbol: "arrow.clockwise", help: l.t("action.refresh"),
+                               spinning: model.isRefreshing, action: model.refresh)
+                    IconButton(symbol: "gearshape", help: l.t("action.settings"), action: onSettings)
+                }
+            }
             Divider()
-            UsageSection(usage: model.usage, error: model.usageError, l: l)
+            UsageSection(usage: model.usage, error: model.usageError, pace: model.weekPace, l: l)
             Divider()
             row(l.t("window.label"), windowText)
             serviceSection
-            Divider()
-            Toggle(l.t("action.launchAtLogin"), isOn: Binding(
-                get: { model.launchAtLogin },
-                set: { _ in model.toggleLaunchAtLogin() }
-            ))
-            .toggleStyle(.checkbox)
-            Toggle(l.t("action.showMenuBarUsage"), isOn: Binding(
-                get: { model.showMenuBarUsage },
-                set: { _ in model.toggleMenuBarUsage() }
-            ))
-            .toggleStyle(.checkbox)
-            Toggle(l.t("action.showMenuBarText"), isOn: Binding(
-                get: { model.showMenuBarText },
-                set: { _ in model.toggleMenuBarText() }
-            ))
-            .toggleStyle(.checkbox)
-            HStack {
-                Button(l.t("action.openStatus")) { openURL(model.config.status.pageUrl) }
-                Button(l.t("action.refresh")) { model.refresh() }
-                Spacer()
-                Button(l.t("action.quit", model.config.appName)) { NSApp.terminate(nil) }
-            }
-            .controlSize(.small)
-        }
-        .padding(14)
-        .frame(width: 300)
-    }
-
-    private var header: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(nsImage: MenuBarIcon.image(for: model.peak.isPeak ? .peak : .offPeak))
-            VStack(alignment: .leading, spacing: 2) {
-                Text(l.t(model.peak.isPeak ? "state.peak" : "state.offpeak")).font(.headline)
-                Text(l.t(model.peak.isPeak ? "detail.peak" : "detail.offpeak"))
-                    .font(.callout).foregroundStyle(.secondary)
-                Text(countdownText).font(.callout.monospacedDigit())
-            }
         }
     }
 
@@ -63,7 +72,13 @@ struct MenuView: View {
             return model.serviceFailed ? l.t("service.unavailable") : l.t("service.loading")
         }()
         VStack(alignment: .leading, spacing: 4) {
-            row(l.t("service.label"), text, alert: model.service?.level == .degraded)
+            HStack(alignment: .firstTextBaseline) {
+                row(l.t("service.label"), text, alert: model.service?.level == .degraded)
+                Spacer()
+                IconButton(symbol: "arrow.up.right.square", help: l.t("action.openStatus")) {
+                    openURL(model.config.status.pageUrl)
+                }
+            }
             ForEach(model.service?.incidents ?? [], id: \.self) { name in
                 Text("• \(name)").font(.caption).foregroundStyle(.red)
             }
@@ -90,5 +105,29 @@ struct MenuView: View {
         guard let w = model.window else { return "–" }
         return l.t("window.value", Formatters.weekdays(w.weekdays),
                    Formatters.time.string(from: w.start), Formatters.time.string(from: w.end))
+    }
+}
+
+/// Small borderless icon button with a tooltip; optionally spins while busy.
+struct IconButton: View {
+    let symbol: String
+    let help: String
+    var spinning = false
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.system(size: 13, weight: .medium))
+                .rotationEffect(.degrees(spinning ? 360 : 0))
+                .animation(spinning ? .linear(duration: 0.8).repeatForever(autoreverses: false) : .default,
+                           value: spinning)
+                .frame(width: 24, height: 24)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.borderless)
+        .foregroundStyle(.secondary)
+        .help(help)
+        .accessibilityLabel(help)
     }
 }
