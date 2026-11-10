@@ -38,9 +38,9 @@
 "settings.general" = "General";
 "settings.menuBar" = "Menu bar";
 "settings.warnWeek" = "Ring at high weekly usage";
-"settings.notifyPeakSoon" = "Before peak hours end";
+"settings.notifyPeakSoon" = "Peak hours end";
 "settings.minutesBefore" = "%ld min before";
-"settings.notifyPeakEnded" = "When peak hours have ended";
+"settings.notifyPeakEnded" = "Peak hours have ended";
 "settings.notifyWeek" = "Weekly limit warnings";
 "settings.notificationsDenied" = "Notifications are off for this app in System Settings.";
 "week.reached" = "Weekly limit reached until %@";
@@ -56,7 +56,7 @@
 "notify.week.title" = "Weekly usage at %@";
 "settings.peakOnlyDuringPeak" = "Only during peak hours";
 "settings.notifyPeak" = "Notify: peak hours";
-"settings.notifyPeakStart" = "Before peak hours start";
+"settings.notifyPeakStart" = "Peak hours start";
 "settings.atStart" = "At the start";
 "settings.notifyUsage" = "Notify: usage";
 "settings.notifySession" = "Session warnings (80% and 90%)";

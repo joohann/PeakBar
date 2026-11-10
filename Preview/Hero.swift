@@ -86,10 +86,10 @@ struct LaptopView<Screen: View>: View {
                         .stroke(Color(white: 0.42), lineWidth: 2))
                 screen
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .padding(.top, 22).padding(.horizontal, 18)
-                Circle().fill(Color(white: 0.25)).frame(width: 7, height: 7).padding(.top, 8)
+                    .padding(.top, 30).padding(.horizontal, 18)
+                Circle().fill(Color(white: 0.25)).frame(width: 7, height: 7).padding(.top, 12)
             }
-            .frame(width: screenSize.width + 36, height: screenSize.height + 22 + 26)
+            .frame(width: screenSize.width + 36, height: screenSize.height + 30 + 22)
             // Base: a thin slab, slightly wider than the lid, with a finger notch.
             ZStack(alignment: .top) {
                 UnevenRoundedRectangle(topLeadingRadius: 3, bottomLeadingRadius: 18,
@@ -187,8 +187,9 @@ func renderDocs(dir: String, config: AppConfig, base: PeakScheduling, localizer:
         Scene(t: peak, status: ok(peak), session: 74, week: 68, weekDays: 3, settings: true),
     ]
     let screen = CGSize(width: 960, height: 600)
+    let slideTitles = ["Off-peak", "Peak hours", "Disruption", "Settings"]
 
-    func laptop(_ s: Scene, dark: Bool) async -> NSBitmapImageRep {
+    func laptop(_ s: Scene, dark: Bool, slide: Int? = nil) async -> NSBitmapImageRep {
         let usage = Usage(session: UsageWindow(percent: s.session, resetsAt: s.t + 2.5 * 3600),
                           week: UsageWindow(percent: s.week, resetsAt: s.t + s.weekDays * 86400),
                           plan: "max", fetchedAt: s.t)
@@ -198,7 +199,12 @@ func renderDocs(dir: String, config: AppConfig, base: PeakScheduling, localizer:
                                 planner: NotificationPlanner(schedule: base, l: localizer), clock: { s.t })
         try? await Task.sleep(nanoseconds: 300_000_000)
         let desktop = DesktopView(model: model, l: localizer, dark: dark, showsSettings: s.settings, size: screen)
-        return snapshot(LaptopView(screen: desktop, screenSize: screen), dark: dark)
+        let device = LaptopView(screen: desktop, screenSize: screen)
+        guard let slide else { return snapshot(device, dark: dark) }
+        return snapshot(VStack(spacing: 0) {
+            device
+            SlideIndicator(count: scenes.count, active: slide, title: slideTitles[slide]).padding(.bottom, 24)
+        }.background(Color.white), dark: false)
     }
 
     for dark in [false, true] {
@@ -207,8 +213,31 @@ func renderDocs(dir: String, config: AppConfig, base: PeakScheduling, localizer:
             .write(to: URL(fileURLWithPath: "\(dir)/laptop-\(dark ? "dark" : "light").png"))
     }
     var frames: [GifWriter.Frame] = []
-    for scene in scenes {
-        frames.append(.init(image: await laptop(scene, dark: false).cgImage!, hold: 2.6))
+    for (i, scene) in scenes.enumerated() {
+        frames.append(.init(image: await laptop(scene, dark: false, slide: i).cgImage!, hold: 2.6))
     }
     GifWriter.write(frames, width: 1000, to: URL(fileURLWithPath: "\(dir)/demo.gif"))
+}
+
+/// Dots under the GIF so viewers see there are several slides: the active one is a longer pill.
+struct SlideIndicator: View {
+    let count: Int
+    let active: Int
+    let title: String
+
+    var body: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 8) {
+                ForEach(0..<count, id: \.self) { i in
+                    Capsule()
+                        .fill(i == active ? Color(white: 0.2) : Color(white: 0.78))
+                        .frame(width: i == active ? 28 : 10, height: 10)
+                }
+            }
+            Text("\(active + 1) / \(count) · \(title)")
+                .font(.system(size: 17, weight: .medium))
+                .foregroundStyle(Color(white: 0.3))
+                .monospacedDigit()
+        }
+    }
 }

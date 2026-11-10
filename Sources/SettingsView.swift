@@ -8,7 +8,7 @@ struct SettingsView: View {
     @Environment(\.openURL) private var openURL
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 9) {
             HStack {
                 Text(l.t("settings.title")).font(.headline)
                 Spacer()
@@ -28,10 +28,8 @@ struct SettingsView: View {
                 toggle("settings.warnWeek", \.warnWeekInMenuBar)
             }
             section(l.t("settings.notifyPeak")) {
-                toggle("settings.notifyPeakStart", \.notifyPeakStart)
-                minutes(\.peakStartMinutes, in: 0...60, enabled: model.settings.notifyPeakStart, zeroKey: "settings.atStart")
-                toggle("settings.notifyPeakSoon", \.notifyPeakSoon)
-                minutes(\.peakSoonMinutes, in: 1...60, enabled: model.settings.notifyPeakSoon)
+                toggle("settings.notifyPeakStart", \.notifyPeakStart, minutes: \.peakStartMinutes, in: 0...60)
+                toggle("settings.notifyPeakSoon", \.notifyPeakSoon, minutes: \.peakSoonMinutes, in: 1...60)
                 toggle("settings.notifyPeakEnded", \.notifyPeakEnded)
             }
             section(l.t("settings.notifyUsage")) {
@@ -57,19 +55,28 @@ struct SettingsView: View {
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder _ content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 3) {
             Text(title).font(.caption).foregroundStyle(.secondary)
             content()
         }
     }
 
-    private func minutes(_ path: WritableKeyPath<AppSettings, Int>, in range: ClosedRange<Int>,
-                         enabled: Bool, zeroKey: String? = nil) -> some View {
-        let value = model.settings[keyPath: path]
-        let label = value == 0 ? l.t(zeroKey ?? "settings.atStart") : l.t("settings.minutesBefore", value)
-        return Stepper(value: binding(path), in: range) { Text(label).monospacedDigit() }
-            .padding(.leading, 20)
-            .disabled(!enabled)
+    /// A toggle with its minutes stepper on the same line, e.g. "Peak hours start   5 min before".
+    private func toggle(_ key: String, _ flag: WritableKeyPath<AppSettings, Bool>,
+                        minutes: WritableKeyPath<AppSettings, Int>, in range: ClosedRange<Int>) -> some View {
+        let value = model.settings[keyPath: minutes]
+        let on = model.settings[keyPath: flag]
+        let label = value == 0 ? l.t("settings.atStart") : l.t("settings.minutesBefore", value)
+        return HStack(spacing: 4) {
+            toggle(key, flag)
+            Spacer(minLength: 8)
+            Group {
+                Text(label).monospacedDigit().foregroundStyle(.secondary)
+                Stepper("", value: binding(minutes), in: range).labelsHidden().controlSize(.mini)
+            }
+            .disabled(!on)
+            .opacity(on ? 1 : 0.5)
+        }
     }
 
     private func toggle(_ key: String, _ path: WritableKeyPath<AppSettings, Bool>) -> some View {
@@ -81,3 +88,4 @@ struct SettingsView: View {
                 set: { value in model.update { $0[keyPath: path] = value } })
     }
 }
+

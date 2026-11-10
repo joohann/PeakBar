@@ -37,9 +37,9 @@
 "settings.general" = "Algemeen";
 "settings.menuBar" = "Menubalk";
 "settings.warnWeek" = "Ring bij hoog weekverbruik";
-"settings.notifyPeakSoon" = "Voordat de piekuren eindigen";
-"settings.minutesBefore" = "%ld min van tevoren";
-"settings.notifyPeakEnded" = "Als de piekuren voorbij zijn";
+"settings.notifyPeakSoon" = "Piekuren eindigen";
+"settings.minutesBefore" = "%ld min vooraf";
+"settings.notifyPeakEnded" = "Piekuren zijn voorbij";
 "settings.notifyWeek" = "Waarschuwingen weeklimiet";
 "settings.notificationsDenied" = "Meldingen staan uit voor deze app in Systeeminstellingen.";
 "week.reached" = "Weeklimiet bereikt tot %@";
@@ -55,7 +55,7 @@
 "notify.week.title" = "Weekverbruik op %@";
 "settings.peakOnlyDuringPeak" = "Alleen tijdens piekuren";
 "settings.notifyPeak" = "Melden: piekuren";
-"settings.notifyPeakStart" = "Voordat de piekuren beginnen";
+"settings.notifyPeakStart" = "Piekuren beginnen";
 "settings.atStart" = "Bij de start";
 "settings.notifyUsage" = "Melden: verbruik";
 "settings.notifySession" = "Sessiewaarschuwingen (80% en 90%)";
