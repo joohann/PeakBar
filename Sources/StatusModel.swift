@@ -54,8 +54,11 @@ final class StatusModel: ObservableObject {
         return peak.isPeak ? .peak : .offPeak
     }
 
-    /// The menu bar should point at the weekly limit instead of the session.
-    var showsWeekWarning: Bool { settings.warnWeekInMenuBar && (weekPace?.atRisk ?? false) }
+    /// Weekly usage is high enough to ring the dot in the menu bar (80% orange, 90% red).
+    var weekRing: WeekPace.Level? {
+        guard settings.warnWeekInMenuBar, let used = weekPace?.used, used >= 0.8 else { return nil }
+        return used >= 0.9 ? .critical : .ahead
+    }
 
     func refresh() {
         guard !isRefreshing else { return }

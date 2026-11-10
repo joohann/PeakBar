@@ -33,6 +33,4 @@ struct WeekPace: Equatable {
         return used > elapsed && elapsed >= 0.03 ? .ahead : .onTrack
     }
 
-    /// Worth a warning in the menu bar.
-    var atRisk: Bool { used >= 0.8 || runsOutAt != nil && elapsed >= 0.03 }
 }

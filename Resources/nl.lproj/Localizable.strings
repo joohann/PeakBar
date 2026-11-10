@@ -37,7 +37,7 @@
 "settings.general" = "Algemeen";
 "settings.menuBar" = "Menubalk";
 "settings.notifications" = "Meldingen";
-"settings.warnWeek" = "Waarschuwen als de weeklimiet in gevaar komt";
+"settings.warnWeek" = "Ring bij hoog weekverbruik";
 "settings.notifyPeakSoon" = "Voordat de piekuren eindigen";
 "settings.minutesBefore" = "%ld min van tevoren";
 "settings.notifyPeakEnded" = "Als de piekuren voorbij zijn";
@@ -48,7 +48,6 @@
 "week.onTrack" = "Op schema: ongeveer %@ bij de reset";
 "week.passed" = "%@ van de week voorbij";
 "week.budget" = "%@ per dag over";
-"bar.week" = "W %@";
 "notify.peakSoon.title" = "Piekuren eindigen over %ld min";
 "notify.peakSoon.body" = "Om %@ gelden weer de normale sessielimieten.";
 "notify.peakEnded.title" = "Piekuren zijn voorbij";

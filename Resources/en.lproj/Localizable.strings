@@ -38,7 +38,7 @@
 "settings.general" = "General";
 "settings.menuBar" = "Menu bar";
 "settings.notifications" = "Notifications";
-"settings.warnWeek" = "Warn when the weekly limit is at risk";
+"settings.warnWeek" = "Ring at high weekly usage";
 "settings.notifyPeakSoon" = "Before peak hours end";
 "settings.minutesBefore" = "%ld min before";
 "settings.notifyPeakEnded" = "When peak hours have ended";
@@ -49,7 +49,6 @@
 "week.onTrack" = "On track: about %@ at the reset";
 "week.passed" = "%@ of the week passed";
 "week.budget" = "%@ per day left";
-"bar.week" = "W %@";
 "notify.peakSoon.title" = "Peak hours end in %ld min";
 "notify.peakSoon.body" = "Normal session limits are back at %@.";
 "notify.peakEnded.title" = "Peak hours are over";
