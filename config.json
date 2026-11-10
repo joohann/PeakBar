@@ -1,0 +1,28 @@
+{
+  "appName": "PeakBar",
+  "bundleId": "nl.majikan.peakbar",
+  "version": "1.0.0",
+  "minimumMacOS": "13.0",
+  "signing": {
+    "identity": "-",
+    "notaryProfile": ""
+  },
+  "peak": {
+    "timeZone": "America/Los_Angeles",
+    "weekdays": [2, 3, 4, 5, 6],
+    "start": "05:00",
+    "end": "11:00"
+  },
+  "status": {
+    "url": "https://status.claude.com/api/v2/summary.json",
+    "pageUrl": "https://status.claude.com",
+    "pollSeconds": 300
+  },
+  "usage": {
+    "url": "https://api.anthropic.com/api/oauth/usage",
+    "betaHeader": "oauth-2025-04-20",
+    "keychainService": "Claude Code-credentials",
+    "cliPaths": ["~/.local/bin/claude", "/opt/homebrew/bin/claude", "/usr/local/bin/claude"],
+    "pollSeconds": 300
+  }
+}
