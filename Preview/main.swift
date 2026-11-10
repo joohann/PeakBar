@@ -29,17 +29,6 @@ final class StubNotifier: NotificationPosting {
     func replaceScheduled(_ plan: [PlannedNotification], ids: [String]) {}
     func post(_ notification: PlannedNotification) {}
 }
-/// Shifts the clock so a specific moment can be previewed.
-struct ShiftedSchedule: PeakScheduling {
-    let base: PeakScheduling
-    let offset: TimeInterval
-    func state(at date: Date) -> PeakState {
-        let s = base.state(at: date + offset)
-        return PeakState(isPeak: s.isPeak, nextChange: s.nextChange - offset)
-    }
-    func localWindow(near date: Date) -> LocalWindow? { base.localWindow(near: date + offset) }
-}
-
 @MainActor
 func render(_ view: some View, dark: Bool) -> NSImage {
     let host = NSHostingView(rootView: view
@@ -66,32 +55,39 @@ func run() async {
     let localizer = BundleLocalizer(bundle: bundle)
     let base = try! WeeklyPeakSchedule(config: config.peak)
 
-    let ok = ServiceStatus(level: .operational, description: "All Systems Operational", incidents: [], fetchedAt: Date())
-    let bad = ServiceStatus(level: .degraded, description: "Partial System Outage",
-                            incidents: ["Elevated errors on Claude Opus"], fetchedAt: Date())
-    func use(_ s: Double, _ w: Double, daysLeft: Double) -> Usage {
-        Usage(session: UsageWindow(percent: s, resetsAt: Date() + 2 * 3600),
-              week: UsageWindow(percent: w, resetsAt: Date() + daysLeft * 86400), plan: "max", fetchedAt: Date())
+    // One fixed moment for every image, so re-rendering only changes them when the design changes:
+    // Wednesday 11 November 2026, 16:00 in Amsterdam (peak hours), and 11:00 the same day (off-peak).
+    let peakMoment = ISO8601DateFormatter().date(from: "2026-11-11T15:00:00Z")!
+    let offPeakMoment = peakMoment - 5 * 3600
+    func ok(_ t: Date) -> ServiceStatus {
+        ServiceStatus(level: .operational, description: "All Systems Operational", incidents: [], fetchedAt: t - 120)
     }
-    let nextPeak = base.state(at: Date()).isPeak ? Date() : base.state(at: Date()).nextChange + 2 * 3600
-    let scenarios: [(TimeInterval, ServiceStatus, Usage, Bool)] = [
-        (0, ok, use(12, 18, daysLeft: 4), false),                               // on track
-        (nextPeak.timeIntervalSinceNow, ok, use(74, 68, daysLeft: 3), false),   // ahead, runs out early
-        (nextPeak.timeIntervalSinceNow, bad, use(93, 91, daysLeft: 2), false),  // critical
-        (0, ok, use(12, 18, daysLeft: 4), true),                                // settings (back)
+    func bad(_ t: Date) -> ServiceStatus {
+        ServiceStatus(level: .degraded, description: "Partial System Outage",
+                      incidents: ["Elevated errors on Claude Opus"], fetchedAt: t - 120)
+    }
+    func use(_ t: Date, _ s: Double, _ w: Double, daysLeft: Double) -> Usage {
+        Usage(session: UsageWindow(percent: s, resetsAt: t + 2.5 * 3600),
+              week: UsageWindow(percent: w, resetsAt: t + daysLeft * 86400), plan: "max", fetchedAt: t)
+    }
+    let scenarios: [(Date, ServiceStatus, Usage, Bool)] = [
+        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), false),  // on track
+        (peakMoment, ok(peakMoment), use(peakMoment, 74, 68, daysLeft: 3), false),            // ahead, runs out early
+        (peakMoment, bad(peakMoment), use(peakMoment, 93, 91, daysLeft: 2), false),           // critical
+        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), true),    // settings (back)
     ]
 
     var rows: [[NSImage]] = []
     for dark in [false, true] {
         var row: [NSImage] = []
-        for (offset, status, usage, back) in scenarios {
-            let schedule = ShiftedSchedule(base: base, offset: offset)
-            let model = StatusModel(config: config, schedule: schedule,
+        for (t, status, usage, back) in scenarios {
+            let model = StatusModel(config: config, schedule: base,
                                     provider: StubProvider(status: status),
                                     usageProvider: StubUsage(usage: usage),
                                     loginItem: StubLoginItem(), preferences: StubPreferences(),
                                     notifier: StubNotifier(),
-                                    planner: NotificationPlanner(schedule: schedule, l: localizer))
+                                    planner: NotificationPlanner(schedule: base, l: localizer),
+                                    clock: { t })
             try? await Task.sleep(nanoseconds: 300_000_000)  // let the stub fetches land
             row.append(render(VStack(alignment: .trailing, spacing: 6) {
                 MenuBarLabel(model: model, l: localizer).padding(6)
@@ -109,7 +105,7 @@ func run() async {
     }
 
     if args.count > 3 {
-        await renderDocs(dir: args[3], config: config, base: base, localizer: localizer, peakStart: nextPeak - 2 * 3600)
+        await renderDocs(dir: args[3], config: config, base: base, localizer: localizer, peakStart: peakMoment - 2 * 3600)
     }
 
     // Compose into one sheet, top-aligned.
