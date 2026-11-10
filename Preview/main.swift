@@ -97,6 +97,13 @@ func run() async {
                 MenuBarLabel(model: model, l: localizer).padding(6)
                 MenuView(model: model, l: localizer, showsSettings: back)
             }.padding(8), dark: dark))
+            if args.count > 3, let last = row.last {
+                // Individual images for the README, e.g. docs/panel-ahead-dark.png
+                let name = ["ontrack", "ahead", "critical", "settings"][row.count - 1]
+                let file = "\(args[3])/panel-\(name)-\(dark ? "dark" : "light").png"
+                let rep = NSBitmapImageRep(data: last.tiffRepresentation!)!
+                try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: file))
+            }
         }
         rows.append(row)
     }
