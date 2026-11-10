@@ -25,6 +25,7 @@ final class StatusModel: ObservableObject {
     private let notifier: NotificationPosting
     private let planner: NotificationPlanner
     private var scheduledPlan: [PlannedNotification]?
+    private var scheduledSessionPlan: [PlannedNotification]?
     private var ticker: AnyCancellable?
     private var wake: AnyCancellable?
     private var tasks: [Task<Void, Never>] = []
@@ -83,6 +84,7 @@ final class StatusModel: ObservableObject {
         settings = next
         preferences.save(next)
         schedulePeakNotifications(force: true)
+        scheduleSessionReset(force: true)
         if turnedOn { Task { await authorizeNotifications() } }
     }
 
@@ -137,6 +139,20 @@ final class StatusModel: ObservableObject {
         notifier.replaceScheduled(plan, ids: NotificationPlanner.peakIds)
     }
 
+    private func scheduleSessionReset(force: Bool = false) {
+        let plan = planner.sessionResetPlan(session: usage?.session, now: now, settings: settings)
+        guard force || plan != scheduledSessionPlan else { return }
+        scheduledSessionPlan = plan
+        notifier.replaceScheduled(plan, ids: NotificationPlanner.sessionResetIds)
+    }
+
+    private func checkSessionWarning() {
+        let (note, marks) = planner.sessionWarning(session: usage?.session, settings: settings,
+                                                   sent: preferences.sentSessionWarnings)
+        preferences.sentSessionWarnings = marks
+        if let note { notifier.post(note) }
+    }
+
     private func checkWeekWarning() {
         let (note, marks) = planner.weekWarning(pace: weekPace, settings: settings,
                                                 sent: preferences.sentWeekWarnings)
@@ -146,7 +162,11 @@ final class StatusModel: ObservableObject {
 
     private func fetchStatus() async {
         do {
-            service = try await provider.fetch()
+            let next = try await provider.fetch()
+            if let note = planner.incidentNote(previous: service?.level, current: next, settings: settings) {
+                notifier.post(note)
+            }
+            service = next
             serviceFailed = false
         } catch {
             serviceFailed = true
@@ -161,6 +181,8 @@ final class StatusModel: ObservableObject {
             usageError = nil
             now = Date()
             checkWeekWarning()
+            checkSessionWarning()
+            scheduleSessionReset()
             return true
         } catch let error as UsageError {
             Log.usage.info("usage fetch failed: \(String(describing: error), privacy: .public)")

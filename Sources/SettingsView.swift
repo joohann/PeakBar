@@ -22,20 +22,28 @@ struct SettingsView: View {
             section(l.t("settings.menuBar")) {
                 toggle("action.showMenuBarUsage", \.showMenuBarUsage)
                 toggle("action.showMenuBarText", \.showMenuBarText)
+                toggle("settings.peakOnlyDuringPeak", \.peakTextOnlyDuringPeak)
+                    .padding(.leading, 20)
+                    .disabled(!model.settings.showMenuBarText)
                 toggle("settings.warnWeek", \.warnWeekInMenuBar)
             }
-            section(l.t("settings.notifications")) {
+            section(l.t("settings.notifyPeak")) {
+                toggle("settings.notifyPeakStart", \.notifyPeakStart)
+                minutes(\.peakStartMinutes, in: 0...60, enabled: model.settings.notifyPeakStart, zeroKey: "settings.atStart")
                 toggle("settings.notifyPeakSoon", \.notifyPeakSoon)
-                Stepper(value: binding(\.peakSoonMinutes), in: 1...60) {
-                    Text(l.t("settings.minutesBefore", model.settings.peakSoonMinutes)).monospacedDigit()
-                }
-                .padding(.leading, 20)
-                .disabled(!model.settings.notifyPeakSoon)
+                minutes(\.peakSoonMinutes, in: 1...60, enabled: model.settings.notifyPeakSoon)
                 toggle("settings.notifyPeakEnded", \.notifyPeakEnded)
+            }
+            section(l.t("settings.notifyUsage")) {
+                toggle("settings.notifySession", \.notifySession)
+                toggle("settings.notifySessionReset", \.notifySessionReset)
                 toggle("settings.notifyWeek", \.notifyWeek)
-                if model.notificationsDenied && model.settings.wantsNotifications {
-                    Text(l.t("settings.notificationsDenied")).font(.caption).foregroundStyle(.orange)
-                }
+            }
+            section(l.t("settings.notifyStatus")) {
+                toggle("settings.notifyIncidents", \.notifyIncidents)
+            }
+            if model.notificationsDenied && model.settings.wantsNotifications {
+                Text(l.t("settings.notificationsDenied")).font(.caption).foregroundStyle(.orange)
             }
             Divider()
             HStack {
@@ -53,6 +61,15 @@ struct SettingsView: View {
             Text(title).font(.caption).foregroundStyle(.secondary)
             content()
         }
+    }
+
+    private func minutes(_ path: WritableKeyPath<AppSettings, Int>, in range: ClosedRange<Int>,
+                         enabled: Bool, zeroKey: String? = nil) -> some View {
+        let value = model.settings[keyPath: path]
+        let label = value == 0 ? l.t(zeroKey ?? "settings.atStart") : l.t("settings.minutesBefore", value)
+        return Stepper(value: binding(path), in: range) { Text(label).monospacedDigit() }
+            .padding(.leading, 20)
+            .disabled(!enabled)
     }
 
     private func toggle(_ key: String, _ path: WritableKeyPath<AppSettings, Bool>) -> some View {

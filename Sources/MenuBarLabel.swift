@@ -30,7 +30,7 @@ struct MenuBarLabel: View {
         if s.showMenuBarUsage, let session = model.usage?.session {
             parts.append(Formatters.percent(session.percent))
         }
-        if s.showMenuBarText {
+        if s.showMenuBarText, model.peak.isPeak || !s.peakTextOnlyDuringPeak {
             parts.append(model.peak.isPeak
                 ? l.t("bar.peak", Formatters.duration(from: model.now, to: model.peak.nextChange))
                 : l.t("bar.offpeak"))

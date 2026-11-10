@@ -19,6 +19,7 @@ struct StubLoginItem: LoginItemManaging {
 final class StubPreferences: PreferencesStoring {
     var settings = AppSettings()
     var sentWeekWarnings: Set<String> = []
+    var sentSessionWarnings: Set<String> = []
     func load() -> AppSettings { settings }
     func save(_ s: AppSettings) { settings = s }
 }
