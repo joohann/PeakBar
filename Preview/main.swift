@@ -108,6 +108,10 @@ func run() async {
         rows.append(row)
     }
 
+    if args.count > 3 {
+        await renderDocs(dir: args[3], config: config, base: base, localizer: localizer, peakStart: nextPeak - 2 * 3600)
+    }
+
     // Compose into one sheet, top-aligned.
     let gap: CGFloat = 16
     let cellW = rows.flatMap { $0 }.map(\.size.width).max()!

@@ -3,15 +3,7 @@
 A tiny macOS menu bar app that shows whether it is currently **Claude peak hours**, how much of your **session and weekly usage** you have used, and whether **status.claude.com** reports a disruption. It can notify you before peak hours start and end, when your session resets, and when you are running low.
 
 <p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/panel-ahead-dark.png">
-    <img src="docs/panel-ahead-light.png" width="300" alt="PeakBar panel during peak hours, with session and weekly usage">
-  </picture>
-  &nbsp;&nbsp;
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/panel-settings-dark.png">
-    <img src="docs/panel-settings-light.png" width="300" alt="PeakBar settings on the back of the card">
-  </picture>
+  <img src="docs/demo.gif" width="760" alt="PeakBar on a laptop: off-peak, peak hours, a disruption and the settings">
 </p>
 
 > Unofficial. Not affiliated with or endorsed by Anthropic.
@@ -40,6 +32,18 @@ A tiny macOS menu bar app that shows whether it is currently **Claude peak hours
 English and Dutch, follows your macOS language. Native Swift, about 2 MB, Apple silicon and Intel, macOS 13 or later.
 
 ## Settings
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/panel-ahead-dark.png">
+    <img src="docs/panel-ahead-light.png" width="300" alt="PeakBar panel during peak hours, with session and weekly usage">
+  </picture>
+  &nbsp;&nbsp;
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/panel-settings-dark.png">
+    <img src="docs/panel-settings-light.png" width="300" alt="PeakBar settings on the back of the card">
+  </picture>
+</p>
 
 All settings are on the back of the card (gear icon).
 
@@ -98,7 +102,7 @@ scripts/build.sh            # build/PeakBar.app
 scripts/build.sh install    # also install to /Applications and start
 scripts/package.sh          # build/PeakBar-<version>.dmg
 scripts/preview.sh          # build/preview.png, renders the panel offscreen
-scripts/preview.sh docs     # also writes the README images to docs/
+scripts/preview.sh docs     # also writes the README images and demo.gif to docs/
 ```
 
 All names and settings live in `config.json`: app name, bundle id, version, peak window, URLs, poll intervals and signing. Renaming the app is a change in that one file.

@@ -6,7 +6,7 @@ import Combine
 final class StatusModel: ObservableObject {
     enum Indicator { case offPeak, peak, incident }
 
-    @Published private(set) var now = Date()
+    @Published private(set) var now: Date
     @Published private(set) var service: ServiceStatus?
     @Published private(set) var serviceFailed = false
     @Published private(set) var usage: Usage?
@@ -24,6 +24,7 @@ final class StatusModel: ObservableObject {
     private let preferences: PreferencesStoring
     private let notifier: NotificationPosting
     private let planner: NotificationPlanner
+    private let clock: () -> Date
     private var scheduledPlan: [PlannedNotification]?
     private var scheduledSessionPlan: [PlannedNotification]?
     private var ticker: AnyCancellable?
@@ -32,7 +33,9 @@ final class StatusModel: ObservableObject {
 
     init(config: AppConfig, schedule: PeakScheduling, provider: ServiceStatusProviding,
          usageProvider: UsageProviding, loginItem: LoginItemManaging, preferences: PreferencesStoring,
-         notifier: NotificationPosting, planner: NotificationPlanner) {
+         notifier: NotificationPosting, planner: NotificationPlanner, clock: @escaping () -> Date = Date.init) {
+        self.clock = clock
+        self.now = clock()
         self.config = config
         self.schedule = schedule
         self.provider = provider
@@ -91,14 +94,15 @@ final class StatusModel: ObservableObject {
     private func start() {
         ticker = Timer.publish(every: 15, tolerance: 5, on: .main, in: .common)
             .autoconnect()
-            .sink { [weak self] in
-                self?.now = $0
-                self?.schedulePeakNotifications()
+            .sink { [weak self] _ in
+                guard let self else { return }
+                self.now = self.clock()
+                self.schedulePeakNotifications()
             }
         wake = NSWorkspace.shared.notificationCenter
             .publisher(for: NSWorkspace.didWakeNotification)
             .sink { [weak self] _ in
-                self?.now = Date()
+                self?.now = self?.clock() ?? Date()
                 self?.schedulePeakNotifications(force: true)
                 self?.refresh()
             }
@@ -171,7 +175,7 @@ final class StatusModel: ObservableObject {
         } catch {
             serviceFailed = true
         }
-        now = Date()
+        now = clock()
     }
 
     /// Returns false when the next attempt should back off.
@@ -179,7 +183,7 @@ final class StatusModel: ObservableObject {
         do {
             usage = try await usageProvider.fetch()
             usageError = nil
-            now = Date()
+            now = clock()
             checkWeekWarning()
             checkSessionWarning()
             scheduleSessionReset()
