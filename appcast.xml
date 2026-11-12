@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><!-- sparkle-sign-warning:
+IMPORTANT: This file was signed by Sparkle. Any modifications to this file requires re-signing this file with generate_appcast or sign_update! The signed signature will be embedded at the end of this file.
+--><rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+  <channel>
+    <title>PeakBar</title>
+    <item>
+      <title>PeakBar 1.2.0</title>
+      <pubDate>Thu, 12 Nov 2026 22:35:56 +0000</pubDate>
+      <sparkle:version>1.2.0</sparkle:version>
+      <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
+      <sparkle:fullReleaseNotesLink>https://github.com/joohann/PeakBar/releases/tag/v1.2.0</sparkle:fullReleaseNotesLink>
+      <description sparkle:format="markdown"><![CDATA[
+### New
+
+- **Updates from within the app.** PeakBar checks GitHub once a day for a new version. When there is one, you get a notification and an **Update** button on the card; one click downloads, verifies and installs it, then restarts PeakBar. Powered by [Sparkle](https://sparkle-project.org).
+- Settings: **Check for updates** with a **Check now** button, and **Notify when an update is available**. The back of the card also shows the version.
+
+### Security
+
+- Updates and the update feed are signed with an EdDSA key; unsigned or altered updates are refused.
+
+### Note
+
+- Version 1.1.1 and older have no updater: install this version once by hand, later versions arrive by themselves.
+]]></description>
+      <enclosure url="https://github.com/joohann/PeakBar/releases/download/v1.2.0/PeakBar-1.2.0.dmg" type="application/octet-stream" sparkle:edSignature="HgFymgU0Xzqk82yZ3KIMJPJrbOq8Aj5MMAMWK0FZZ343YqBVZ6r5Yyr4q9U/e6ikbhcow0u5ZNaz+C7etw9XCg==" length="1851056"></enclosure>
+    </item>
+  </channel>
+</rss><!-- sparkle-signatures:
+edSignature: nWfRffpn5gDLd/3R1+X9+dhikbKU8vWk/W3+yIE3aByODfB2vJNQMOPiVpkhmaQAYxMg/qPndR1uF/661/5FDw==
+length: 1900
+-->
