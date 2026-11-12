@@ -31,6 +31,15 @@ final class StubNotifier: NotificationPosting {
     func post(_ notification: PlannedNotification) {}
     var onOpen: ((String) -> Void)?
 }
+/// Lets a scenario announce an update, as a background check would.
+@MainActor
+final class StubUpdater: UpdateManaging {
+    var automaticallyChecks = true
+    var onUpdateFound: ((String) -> Void)?
+    var onUpdateHandled: (() -> Void)?
+    func checkNow() {}
+}
+
 @MainActor
 func render(_ view: some View, dark: Bool) -> NSImage {
     let host = NSHostingView(rootView: view
@@ -72,24 +81,28 @@ func run() async {
         Usage(session: UsageWindow(percent: s, resetsAt: t + 2.5 * 3600),
               week: UsageWindow(percent: w, resetsAt: t + daysLeft * 86400), plan: "max", fetchedAt: t)
     }
-    let scenarios: [(Date, ServiceStatus, Usage, Bool)] = [
-        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), false),  // on track
-        (peakMoment, ok(peakMoment), use(peakMoment, 74, 68, daysLeft: 3), false),            // ahead, runs out early
-        (peakMoment, bad(peakMoment), use(peakMoment, 93, 91, daysLeft: 2), false),           // critical
-        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), true),    // settings (back)
+    let names = ["ontrack", "ahead", "critical", "settings", "update"]
+    let scenarios: [(Date, ServiceStatus, Usage, Bool, String?)] = [
+        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), false, nil),  // on track
+        (peakMoment, ok(peakMoment), use(peakMoment, 74, 68, daysLeft: 3), false, nil),            // ahead, runs out early
+        (peakMoment, bad(peakMoment), use(peakMoment, 93, 91, daysLeft: 2), false, nil),           // critical
+        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), true, nil),    // settings (back)
+        (offPeakMoment, ok(offPeakMoment), use(offPeakMoment, 12, 18, daysLeft: 4), false, "1.3.0"), // update found
     ]
 
     var rows: [[NSImage]] = []
     for dark in [false, true] {
         var row: [NSImage] = []
-        for (t, status, usage, back) in scenarios {
+        for (t, status, usage, back, update) in scenarios {
+            let updater = StubUpdater()
             let model = StatusModel(config: config, schedule: base,
                                     provider: StubProvider(status: status),
                                     usageProvider: StubUsage(usage: usage),
                                     loginItem: StubLoginItem(), preferences: StubPreferences(),
                                     notifier: StubNotifier(),
                                     planner: NotificationPlanner(schedule: base, l: localizer),
-                                    clock: { t })
+                                    updater: updater, clock: { t })
+            if let update { updater.onUpdateFound?(update) }
             try? await Task.sleep(nanoseconds: 300_000_000)  // let the stub fetches land
             row.append(render(VStack(alignment: .trailing, spacing: 6) {
                 MenuBarLabel(model: model, l: localizer).padding(6)
@@ -97,7 +110,7 @@ func run() async {
             }.padding(8), dark: dark))
             if args.count > 3, let last = row.last {
                 // Individual images for the README, e.g. docs/panel-ahead-dark.png
-                let name = ["ontrack", "ahead", "critical", "settings"][row.count - 1]
+                let name = names[row.count - 1]
                 let file = "\(args[3])/panel-\(name)-\(dark ? "dark" : "light").png"
                 let rep = NSBitmapImageRep(data: last.tiffRepresentation!)!
                 try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: file))

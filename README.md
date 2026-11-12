@@ -70,6 +70,19 @@ All settings are on the back of the card (gear icon).
 
 Each warning is sent at most once per session or week. macOS asks once for permission to show notifications.
 
+## Updates
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/panel-update-dark.png">
+    <img src="docs/panel-update-light.png" width="300" alt="PeakBar panel with a new version available and an Update button">
+  </picture>
+</p>
+
+PeakBar checks for a new version once a day. When there is one, you get a notification and the card shows the new version with an **Update** button. Click it (or the notification) to see what is new; PeakBar then downloads the update, checks its signature, installs it and restarts. **Check now** on the back of the card checks right away.
+
+Updates arrive from version 1.2.0 on. If you have 1.1.1 or older, install 1.2.0 once by hand.
+
 ## Install
 
 1. Download `PeakBar-x.y.z.dmg` from [Releases](../../releases) and drag **PeakBar** to **Applications**.
