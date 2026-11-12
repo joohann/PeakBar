@@ -19,10 +19,14 @@ struct AppSettings: Equatable {
     var notifyWeek = true
     // Claude status
     var notifyIncidents = true
+    // Updates
+    var checkForUpdates = true
+    var notifyUpdate = true
 
     var wantsNotifications: Bool {
         notifyPeakStart || notifyPeakSoon || notifyPeakEnded
             || notifySession || notifySessionReset || notifyWeek || notifyIncidents
+            || (checkForUpdates && notifyUpdate)
     }
 }
 
@@ -32,6 +36,8 @@ protocol PreferencesStoring: AnyObject {
     func save(_ settings: AppSettings)
     var sentWeekWarnings: Set<String> { get set }
     var sentSessionWarnings: Set<String> { get set }
+    /// The last version an update notification was posted for, so each version notifies once.
+    var notifiedUpdateVersion: String? { get set }
 }
 
 final class UserDefaultsPreferences: PreferencesStoring {
@@ -50,6 +56,8 @@ final class UserDefaultsPreferences: PreferencesStoring {
         ("notifySessionReset", \.notifySessionReset),
         ("notifyWeek", \.notifyWeek),
         ("notifyIncidents", \.notifyIncidents),
+        ("checkForUpdates", \.checkForUpdates),
+        ("notifyUpdate", \.notifyUpdate),
     ]
     private static let numbers: [Number] = [
         ("peakStartMinutes", \.peakStartMinutes, 0...60),
@@ -58,6 +66,7 @@ final class UserDefaultsPreferences: PreferencesStoring {
     private enum Key {
         static let sentWeekWarnings = "sentWeekWarnings"
         static let sentSessionWarnings = "sentSessionWarnings"
+        static let notifiedUpdateVersion = "notifiedUpdateVersion"
     }
     private let defaults: UserDefaults
 
@@ -92,5 +101,10 @@ final class UserDefaultsPreferences: PreferencesStoring {
     var sentSessionWarnings: Set<String> {
         get { Set(defaults.stringArray(forKey: Key.sentSessionWarnings) ?? []) }
         set { defaults.set(Array(newValue).sorted(), forKey: Key.sentSessionWarnings) }
+    }
+
+    var notifiedUpdateVersion: String? {
+        get { defaults.string(forKey: Key.notifiedUpdateVersion) }
+        set { defaults.set(newValue, forKey: Key.notifiedUpdateVersion) }
     }
 }

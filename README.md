@@ -29,7 +29,11 @@ A tiny macOS menu bar app that shows whether it is currently **Claude peak hours
 - Weekly warnings at 75% and 90%, and when your pace runs out before the reset
 - Claude disruptions and their recovery
 
-English and Dutch, follows your macOS language. Native Swift, about 2 MB, Apple silicon and Intel, macOS 13 or later.
+**Updates**
+- Checks GitHub once a day for a new version, notifies you and shows an **Update** button on the card
+- Downloads, verifies and installs the new version, then restarts. Powered by [Sparkle](https://sparkle-project.org)
+
+English and Dutch, follows your macOS language. Native Swift, about 4 MB, Apple silicon and Intel, macOS 13 or later.
 
 ## Settings
 
@@ -50,6 +54,8 @@ All settings are on the back of the card (gear icon).
 | Group | Setting | Default |
 | --- | --- | --- |
 | General | Open at login | off |
+| | Check for updates (with a **Check now** button) | on |
+| | Notify when an update is available | on |
 | Menu bar | Show session usage | on |
 | | Show peak status | on |
 | | Only during peak hours | on |
@@ -80,6 +86,7 @@ Don't see the dot? Menu bar managers such as Hidden Bar or Bartender may hide ne
 | --- | --- |
 | Peak hours | Calculated locally from the published window: weekdays 05:00 to 11:00 Pacific time. There is no official API. |
 | Service status | [status.claude.com](https://status.claude.com) public Statuspage API, every 5 minutes. |
+| Updates | `appcast.xml` in this repository, once a day. The download is the DMG from the GitHub release. |
 | Usage | `api.anthropic.com/api/oauth/usage`, an **undocumented** endpoint that Claude Code's `/usage` also uses. It may change or stop working at any time. |
 
 ### Usage and your credentials
@@ -106,6 +113,17 @@ scripts/preview.sh docs     # also writes the README images and demo.gif to docs
 ```
 
 All names and settings live in `config.json`: app name, bundle id, version, peak window, URLs, poll intervals and signing. Renaming the app is a change in that one file.
+
+### Updates
+
+Every release is signed with an EdDSA key; the app only installs updates that carry a valid signature, and the feed itself is signed too. The public key is in `config.json`, the private key stays in the maintainer's Keychain (create it with `build/vendor/Sparkle-*/bin/generate_keys --account <update.keyAccount>`). Sparkle is downloaded by `scripts/build.sh` at the version pinned in `config.json` and checked against its SHA-256.
+
+Releasing a new version:
+
+1. Set `version` in `config.json` and add a `## <version>` section to `CHANGELOG.md` (it becomes the release notes in the update dialog).
+2. Run `scripts/package.sh`. It builds the DMG and writes a signed `appcast.xml`.
+3. Publish the GitHub release `v<version>` with the DMG.
+4. Commit and push `appcast.xml`. Only then do installed apps see the update.
 
 To sign and notarize with a Developer ID, set `signing.identity` and `signing.notaryProfile` (a `notarytool` keychain profile) in `config.json`; `scripts/package.sh` then does the rest.
 

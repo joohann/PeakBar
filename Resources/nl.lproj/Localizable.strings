@@ -70,3 +70,11 @@
 "notify.session.title" = "Sessieverbruik op %@";
 "notify.incident.title" = "Storing bij Claude";
 "notify.resolved.title" = "Storing bij Claude opgelost";
+"settings.checkForUpdates" = "Op updates controleren";
+"settings.notifyUpdate" = "Melden als er een update is";
+"settings.version" = "Versie %@";
+"action.checkNow" = "Nu controleren";
+"action.update" = "Bijwerken";
+"update.available" = "Versie %@ is beschikbaar";
+"notify.update.title" = "Update beschikbaar: versie %@";
+"notify.update.body" = "Klik om te zien wat er nieuw is en bij te werken.";

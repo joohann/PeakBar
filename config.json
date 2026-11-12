@@ -1,8 +1,9 @@
 {
   "appName": "PeakBar",
   "bundleId": "nl.majikan.peakbar",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "minimumMacOS": "13.0",
+  "repository": "joohann/PeakBar",
   "signing": {
     "identity": "-",
     "notaryProfile": ""
@@ -24,5 +25,15 @@
     "keychainService": "Claude Code-credentials",
     "cliPaths": ["~/.local/bin/claude", "/opt/homebrew/bin/claude", "/usr/local/bin/claude"],
     "pollSeconds": 300
+  },
+  "update": {
+    "feedUrl": "https://raw.githubusercontent.com/{repository}/main/appcast.xml",
+    "downloadUrl": "https://github.com/{repository}/releases/download/v{version}/{appName}-{version}.dmg",
+    "releaseNotesUrl": "https://github.com/{repository}/releases/tag/v{version}",
+    "publicKey": "oXvSXdkaIn8Fc5BaGyz5vjcSEUup2dEC3/pciSPmIP8=",
+    "keyAccount": "nl.majikan.peakbar",
+    "checkSeconds": 86400,
+    "sparkleVersion": "2.10.1",
+    "sparkleSha256": "1a856d2a9edb8e628de88121d7be04cf0e2167f8641650b78fca00b14244cf27"
   }
 }

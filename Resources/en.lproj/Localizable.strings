@@ -71,3 +71,11 @@
 "notify.session.title" = "Session usage at %@";
 "notify.incident.title" = "Claude disruption";
 "notify.resolved.title" = "Claude disruption resolved";
+"settings.checkForUpdates" = "Check for updates";
+"settings.notifyUpdate" = "Notify when an update is available";
+"settings.version" = "Version %@";
+"action.checkNow" = "Check now";
+"action.update" = "Update";
+"update.available" = "Version %@ is available";
+"notify.update.title" = "Update available: version %@";
+"notify.update.body" = "Click to see what is new and update.";

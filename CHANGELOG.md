@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.0
+
+### New
+
+- **Updates from within the app.** PeakBar checks GitHub once a day for a new version. When there is one, you get a notification and an **Update** button on the card; one click downloads, verifies and installs it, then restarts PeakBar. Powered by [Sparkle](https://sparkle-project.org).
+- Settings: **Check for updates** with a **Check now** button, and **Notify when an update is available**. The back of the card also shows the version.
+
+### Security
+
+- Updates and the update feed are signed with an EdDSA key; unsigned or altered updates are refused.
+
+### Note
+
+- Version 1.1.1 and older have no updater: install this version once by hand, later versions arrive by themselves.
+
 ## 1.1.1
 
 ### Fixed

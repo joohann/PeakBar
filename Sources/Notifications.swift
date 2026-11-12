@@ -15,10 +15,13 @@ protocol NotificationPosting: AnyObject {
     /// Replaces all scheduled peak notifications with this plan.
     func replaceScheduled(_ plan: [PlannedNotification], ids: [String])
     func post(_ notification: PlannedNotification)
+    /// Called with the notification id when the user clicks a notification.
+    var onOpen: ((String) -> Void)? { get set }
 }
 
 final class UserNotificationService: NSObject, NotificationPosting, UNUserNotificationCenterDelegate {
     private let center = UNUserNotificationCenter.current()
+    var onOpen: ((String) -> Void)?
 
     override init() {
         super.init()
@@ -56,5 +59,12 @@ final class UserNotificationService: NSObject, NotificationPosting, UNUserNotifi
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler([.banner, .sound])
+    }
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let id = response.notification.request.identifier
+        DispatchQueue.main.async { self.onOpen?(id) }
+        completionHandler()
     }
 }

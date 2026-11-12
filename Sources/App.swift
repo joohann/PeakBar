@@ -24,7 +24,8 @@ struct MenuBarApp: App {
                 loginItem: MainAppLoginItem(),
                 preferences: UserDefaultsPreferences(),
                 notifier: UserNotificationService(),
-                planner: NotificationPlanner(schedule: schedule, l: localizer)
+                planner: NotificationPlanner(schedule: schedule, l: localizer),
+                updater: SparkleUpdater()
             )
             _model = StateObject(wrappedValue: model)
             self.localizer = localizer

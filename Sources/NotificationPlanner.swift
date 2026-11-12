@@ -4,6 +4,7 @@ import Foundation
 struct NotificationPlanner {
     static let peakIds = ["peak.start", "peak.soon", "peak.ended"]
     static let sessionResetIds = ["session.reset"]
+    static let updateId = "update.available"
 
     let schedule: PeakScheduling
     let l: Localizing
@@ -47,6 +48,15 @@ struct NotificationPlanner {
                 date: end))
         }
         return plan
+    }
+
+    // MARK: Updates
+
+    /// One notification per new version, only when update checks and their notification are on.
+    func updateNote(version: String, settings: AppSettings, notified: String?) -> PlannedNotification? {
+        guard settings.checkForUpdates, settings.notifyUpdate, version != notified else { return nil }
+        return PlannedNotification(id: Self.updateId, title: l.t("notify.update.title", version),
+                                   body: l.t("notify.update.body"), date: nil)
     }
 
     // MARK: Session

@@ -5,7 +5,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-cfg() { plutil -extract "$1" raw -o - config.json; }
+source scripts/lib.sh
 APP_NAME=$(cfg appName)
 BUNDLE_ID=$(cfg bundleId)
 VERSION=$(cfg version)
@@ -24,12 +24,20 @@ scripts/i18n.sh || echo "Let op: vertalingen niet compleet (valt terug op EN)."
 
 APP="build/$APP_NAME.app"
 rm -rf "$APP"
-mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$APP/Contents/Frameworks"
+
+# Sparkle (updates), pinned in config.json and checked against its SHA-256.
+SPARKLE=$(sparkle_dir)
+ditto "$SPARKLE/Sparkle.framework" "$APP/Contents/Frameworks/Sparkle.framework"
+# The XPC services are only needed by sandboxed apps.
+rm -rf "$APP/Contents/Frameworks/Sparkle.framework/Versions/B/XPCServices" \
+       "$APP/Contents/Frameworks/Sparkle.framework/XPCServices"
 
 # Universal binary: Apple silicon + Intel.
 for ARCH in arm64 x86_64; do
   swiftc -O -swift-version 5 -parse-as-library \
     -target "$ARCH-apple-macos$MIN_OS" \
+    -F "$SPARKLE" -framework Sparkle -Xlinker -rpath -Xlinker @executable_path/../Frameworks \
     Sources/*.swift -o "build/$APP_NAME-$ARCH"
 done
 lipo -create "build/$APP_NAME-arm64" "build/$APP_NAME-x86_64" -output "$APP/Contents/MacOS/$APP_NAME"
@@ -62,15 +70,24 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>LSMinimumSystemVersion</key><string>$MIN_OS</string>
   <key>LSUIElement</key><true/>
   <key>NSHighResolutionCapable</key><true/>
+  <key>SUFeedURL</key><string>$(expand "$(cfg update.feedUrl)")</string>
+  <key>SUPublicEDKey</key><string>$(cfg update.publicKey)</string>
+  <key>SUEnableAutomaticChecks</key><true/>
+  <key>SURequireSignedFeed</key><true/>
+  <key>SUVerifyUpdateBeforeExtraction</key><true/>
+  <key>SUAutomaticallyUpdate</key><false/>
+  <key>SUScheduledCheckInterval</key><integer>$(cfg update.checkSeconds)</integer>
 </dict></plist>
 PLIST
 
 IDENTITY=$(cfg signing.identity)
-if [[ "$IDENTITY" == "-" ]]; then
-  codesign --force --sign - "$APP" >/dev/null
-else
-  codesign --force --options runtime --timestamp --sign "$IDENTITY" "$APP"
-fi
+OPTS=()
+[[ "$IDENTITY" != "-" ]] && OPTS=(--options runtime --timestamp)
+# Sign inside out: Sparkle's helpers, the framework (changed above), then the app.
+FW="$APP/Contents/Frameworks/Sparkle.framework"
+for ITEM in "$FW/Versions/B/Autoupdate" "$FW/Versions/B/Updater.app" "$FW" "$APP"; do
+  codesign --force ${OPTS[@]+"${OPTS[@]}"} --sign "$IDENTITY" "$ITEM" 2>/dev/null
+done
 touch "$APP"
 # Re-register so Finder picks up a changed icon instead of a cached one.
 "$LSREGISTER" -f "$APP" 2>/dev/null || true

@@ -20,6 +20,7 @@ final class StubPreferences: PreferencesStoring {
     var settings = AppSettings()
     var sentWeekWarnings: Set<String> = []
     var sentSessionWarnings: Set<String> = []
+    var notifiedUpdateVersion: String?
     func load() -> AppSettings { settings }
     func save(_ s: AppSettings) { settings = s }
 }
@@ -28,6 +29,7 @@ final class StubNotifier: NotificationPosting {
     func isDenied() async -> Bool { false }
     func replaceScheduled(_ plan: [PlannedNotification], ids: [String]) {}
     func post(_ notification: PlannedNotification) {}
+    var onOpen: ((String) -> Void)?
 }
 @MainActor
 func render(_ view: some View, dark: Bool) -> NSImage {

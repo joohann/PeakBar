@@ -15,6 +15,8 @@ final class StatusModel: ObservableObject {
     @Published private(set) var launchAtLogin: Bool
     @Published private(set) var settings: AppSettings
     @Published private(set) var notificationsDenied = false
+    /// Version found by a background update check, shown on the card until the user acts on it.
+    @Published private(set) var availableUpdate: String?
 
     let config: AppConfig
     private let schedule: PeakScheduling
@@ -24,6 +26,7 @@ final class StatusModel: ObservableObject {
     private let preferences: PreferencesStoring
     private let notifier: NotificationPosting
     private let planner: NotificationPlanner
+    private let updater: UpdateManaging
     private let clock: () -> Date
     private var scheduledPlan: [PlannedNotification]?
     private var scheduledSessionPlan: [PlannedNotification]?
@@ -33,7 +36,8 @@ final class StatusModel: ObservableObject {
 
     init(config: AppConfig, schedule: PeakScheduling, provider: ServiceStatusProviding,
          usageProvider: UsageProviding, loginItem: LoginItemManaging, preferences: PreferencesStoring,
-         notifier: NotificationPosting, planner: NotificationPlanner, clock: @escaping () -> Date = Date.init) {
+         notifier: NotificationPosting, planner: NotificationPlanner, updater: UpdateManaging? = nil,
+         clock: @escaping () -> Date = Date.init) {
         self.clock = clock
         self.now = clock()
         self.config = config
@@ -44,6 +48,7 @@ final class StatusModel: ObservableObject {
         self.preferences = preferences
         self.notifier = notifier
         self.planner = planner
+        self.updater = updater ?? NoUpdates()
         self.launchAtLogin = loginItem.isEnabled
         self.settings = preferences.load()
         start()
@@ -79,6 +84,11 @@ final class StatusModel: ObservableObject {
         launchAtLogin = loginItem.isEnabled
     }
 
+    /// Opens the update dialog: from the card, the settings or a clicked notification.
+    func checkForUpdates() {
+        updater.checkNow()
+    }
+
     func update(_ change: (inout AppSettings) -> Void) {
         var next = settings
         change(&next)
@@ -86,12 +96,20 @@ final class StatusModel: ObservableObject {
         let turnedOn = next.wantsNotifications && !settings.wantsNotifications
         settings = next
         preferences.save(next)
+        updater.automaticallyChecks = next.checkForUpdates
+        if !next.checkForUpdates { availableUpdate = nil }
         schedulePeakNotifications(force: true)
         scheduleSessionReset(force: true)
         if turnedOn { Task { await authorizeNotifications() } }
     }
 
     private func start() {
+        updater.automaticallyChecks = settings.checkForUpdates
+        updater.onUpdateFound = { [weak self] version in self?.updateFound(version) }
+        updater.onUpdateHandled = { [weak self] in self?.availableUpdate = nil }
+        notifier.onOpen = { [weak self] id in
+            if id == NotificationPlanner.updateId { self?.checkForUpdates() }
+        }
         ticker = Timer.publish(every: 15, tolerance: 5, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
@@ -128,6 +146,16 @@ final class StatusModel: ObservableObject {
                 try? await Task.sleep(nanoseconds: UInt64(delay * 1e9))
             }
         })
+    }
+
+    private func updateFound(_ version: String) {
+        Log.update.info("update found: \(version, privacy: .public)")
+        availableUpdate = version
+        if let note = planner.updateNote(version: version, settings: settings,
+                                         notified: preferences.notifiedUpdateVersion) {
+            preferences.notifiedUpdateVersion = version
+            notifier.post(note)
+        }
     }
 
     private func authorizeNotifications() async {

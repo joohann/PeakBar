@@ -5,5 +5,5 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 APP_NAME=$(plutil -extract appName raw -o - config.json)
 [[ -d "build/$APP_NAME.app" ]] || scripts/build.sh
-swiftc -swift-version 5 $(ls Sources/*.swift | grep -v '/App.swift$') Preview/*.swift -o build/preview
-build/preview "build/$APP_NAME.app" build/preview.png "${1:-}"
+swiftc -swift-version 5 $(ls Sources/*.swift | grep -vE '/(App|SparkleUpdater).swift$') Preview/*.swift -o build/preview
+build/preview "build/$APP_NAME.app" build/preview.png ${1:+"$1"}

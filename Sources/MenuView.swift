@@ -60,6 +60,15 @@ struct StatusFront: View {
             Divider()
             row(l.t("window.label"), windowText)
             serviceSection
+            if let version = model.availableUpdate {
+                Divider()
+                HStack {
+                    Label(l.t("update.available", version), systemImage: "arrow.down.circle.fill")
+                        .foregroundStyle(Color.accentColor)
+                    Spacer()
+                    Button(l.t("action.update"), action: model.checkForUpdates).controlSize(.small)
+                }
+            }
         }
     }
 

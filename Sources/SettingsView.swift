@@ -18,6 +18,14 @@ struct SettingsView: View {
             section(l.t("settings.general")) {
                 Toggle(l.t("action.launchAtLogin"), isOn: Binding(
                     get: { model.launchAtLogin }, set: { _ in model.toggleLaunchAtLogin() }))
+                HStack(spacing: 4) {
+                    toggle("settings.checkForUpdates", \.checkForUpdates)
+                    Spacer(minLength: 8)
+                    Button(l.t("action.checkNow"), action: model.checkForUpdates).controlSize(.mini)
+                }
+                toggle("settings.notifyUpdate", \.notifyUpdate)
+                    .padding(.leading, 20)
+                    .disabled(!model.settings.checkForUpdates)
             }
             section(l.t("settings.menuBar")) {
                 toggle("action.showMenuBarUsage", \.showMenuBarUsage)
@@ -46,6 +54,8 @@ struct SettingsView: View {
             Divider()
             HStack {
                 Button(l.t("action.openStatus")) { openURL(model.config.status.pageUrl) }
+                Spacer()
+                Text(l.t("settings.version", model.config.version)).font(.caption).foregroundStyle(.tertiary)
                 Spacer()
                 Button(l.t("action.quit", model.config.appName)) { NSApp.terminate(nil) }
             }
