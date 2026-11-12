@@ -69,7 +69,7 @@ Each warning is sent at most once per session or week. macOS asks once for permi
 1. Download `PeakBar-x.y.z.dmg` from [Releases](../../releases) and drag **PeakBar** to **Applications**.
 2. Open PeakBar. The app is not notarized, so macOS warns you. Click **Done**.
 3. Open **System Settings → Privacy & Security** and click **Open Anyway**.
-4. Allow notifications, and allow Keychain access with **Always Allow** for usage percentages (see below).
+4. Allow notifications when macOS asks.
 5. Optional: tick **Open at login** on the back of the card.
 
 Don't see the dot? Menu bar managers such as Hidden Bar or Bartender may hide new icons. Hold **⌘** and drag the dot to a visible spot.
@@ -86,7 +86,7 @@ Don't see the dot? Menu bar managers such as Hidden Bar or Bartender may hide ne
 
 Usage only works if [Claude Code](https://docs.claude.com/en/docs/claude-code) is installed and you are logged in with `claude`. PeakBar then:
 
-- reads Claude Code's access token from the macOS Keychain (read only; macOS asks for permission),
+- reads Claude Code's access token from the macOS Keychain, read only, through `/usr/bin/security`: the tool Claude Code itself uses to store it, so macOS does not ask for your password (also not after Claude Code renews its token),
 - keeps it in memory only, never logs it or writes it to disk,
 - sends it only over HTTPS to the endpoint in `config.json`, identifying itself as PeakBar,
 - when the token has expired, runs `claude auth status` so **Claude Code renews its own token**. PeakBar never touches the refresh token.

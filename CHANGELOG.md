@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- **No more repeated Keychain password prompts.** The token is now read through `/usr/bin/security`, which macOS already trusts for Claude Code's Keychain item. "Always Allow" used to be lost whenever Claude Code renewed its token or the app was rebuilt.
+
+### Changed
+
+- Settings card is about a quarter shorter: minute steppers sit on the same line as their notification.
+
 ## 1.1.0
 
 ### New
