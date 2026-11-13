@@ -4,28 +4,21 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
   <channel>
     <title>PeakBar</title>
     <item>
-      <title>PeakBar 1.2.1</title>
-      <pubDate>Fri, 13 Nov 2026 00:24:34 +0000</pubDate>
-      <sparkle:version>1.2.1</sparkle:version>
-      <sparkle:shortVersionString>1.2.1</sparkle:shortVersionString>
+      <title>PeakBar 1.3.0</title>
+      <pubDate>Fri, 13 Nov 2026 09:25:58 +0000</pubDate>
+      <sparkle:version>1.3.0</sparkle:version>
+      <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:fullReleaseNotesLink>https://github.com/joohann/PeakBar/releases/tag/v1.2.1</sparkle:fullReleaseNotesLink>
+      <sparkle:fullReleaseNotesLink>https://github.com/joohann/PeakBar/releases/tag/v1.3.0</sparkle:fullReleaseNotesLink>
       <description sparkle:format="markdown"><![CDATA[
-### Fixed
+### New
 
-- **No more duplicate usage warnings.** The usage API sometimes reports the same reset as 00:59:59 and sometimes as 01:00:00, which PeakBar took for a new session and warned again. Reset times are now rounded to the minute.
-- **The card always opens on the front.** Closing the panel while the settings were showing used to leave the card turned over.
-
-### Changed
-
-- **New settings card.** Settings are grouped like System Settings, with an icon and a switch per row and a small menu for the minutes. All notifications are in one group; the status page link is on the front of the card only.
-- **Fewer notifications by default.** The session warning is now only sent at 90% (no longer also at 80%), and "Peak ending soon" (formerly "Peak hours end") and "When your session resets" are off by default. Existing settings are kept.
-- Clearer names for the two peak-end notifications: "Peak ending soon" and "Peak hours over".
+- **10 languages.** PeakBar now also speaks German, French, Spanish, Japanese, Simplified Chinese, Arabic, Turkish and Indonesian, next to English and Dutch. It follows your macOS language.
 ]]></description>
-      <enclosure url="https://github.com/joohann/PeakBar/releases/download/v1.2.1/PeakBar-1.2.1.dmg" type="application/octet-stream" sparkle:edSignature="cjAh6vkL0jUyefA65GUzojYslYoplaa/OjL/D4GrVEx6mSrqn097WPgHunwsvxUeWbAZ0aKhgyu3V516vcgODg==" length="1899817"></enclosure>
+      <enclosure url="https://github.com/joohann/PeakBar/releases/download/v1.3.0/PeakBar-1.3.0.dmg" type="application/octet-stream" sparkle:edSignature="pPmSLE2XPN4th/nq5iF2Bn3N961hMjCNvPD6TL2+Jgyql1YvIs0hcFoxt8DHzGblNnWkyKnhRJ039MftY62PAw==" length="1912293"></enclosure>
     </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: aj0GEBGnhyZTraK6+zr7mQgrMpyS7r10vovtXZ69qEq+YwE8SKzNtsNx73Hcuapjg1WeMySTBIHQQe6JrJ7gAQ==
-length: 2144
+edSignature: tcRxAou61YBCvWp11/Ht/3mjQBLsMcwiH+ntwTxwDjIDqZ3MzqMKBeEDl+gsVUIF/xSglemqkm8UX+LEOYIODw==
+length: 1408
 -->
