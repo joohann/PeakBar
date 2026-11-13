@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### New
+
+- **10 languages.** PeakBar now also speaks German, French, Spanish, Japanese, Simplified Chinese, Arabic, Turkish and Indonesian, next to English and Dutch. It follows your macOS language.
+
 ## 1.2.1
 
 ### Fixed

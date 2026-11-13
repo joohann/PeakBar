@@ -1,5 +1,17 @@
 # PeakBar
 
+<p align="center">
+  <a href="../../releases/latest"><img src="https://img.shields.io/github/v/release/joohann/PeakBar?label=release" alt="Latest release"></a>
+  <img src="https://img.shields.io/badge/macOS-13%2B-blue" alt="macOS 13 or later">
+  <img src="https://img.shields.io/badge/Apple%20silicon%20%26%20Intel-universal-blue" alt="Apple silicon and Intel">
+  <img src="https://img.shields.io/badge/languages-10-green" alt="10 languages">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-lightgrey" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  English · Nederlands · Deutsch · Français · Español · 日本語 · 简体中文 · العربية · Türkçe · Bahasa Indonesia
+</p>
+
 A tiny macOS menu bar app that shows whether it is currently **Claude peak hours**, how much of your **session and weekly usage** you have used, and whether **status.claude.com** reports a disruption. It can notify you before peak hours start and end, when your session resets, and when you are running low.
 
 <p align="center">
@@ -33,7 +45,7 @@ A tiny macOS menu bar app that shows whether it is currently **Claude peak hours
 - Checks GitHub once a day for a new version, notifies you and shows an **Update** button on the card
 - Downloads, verifies and installs the new version, then restarts. Powered by [Sparkle](https://sparkle-project.org)
 
-English and Dutch, follows your macOS language. Native Swift, about 4 MB, Apple silicon and Intel, macOS 13 or later.
+In 10 languages, following your macOS language: English, Dutch, German, French, Spanish, Japanese, Simplified Chinese, Arabic, Turkish and Indonesian. Native Swift, about 4 MB, Apple silicon and Intel, macOS 13 or later.
 
 ## Settings
 
@@ -142,12 +154,13 @@ To sign and notarize with a Developer ID, set `signing.identity` and `signing.no
 
 ## Translations
 
-Texts live in `Resources/<lang>.lproj/Localizable.strings`. English is the source; missing or empty keys fall back to English.
+Texts live in `Resources/<lang>.lproj/Localizable.strings`. English is the source; missing or empty keys fall back to English. Improvements by native speakers are very welcome: open a pull request with the changed file.
 
 ```bash
 scripts/i18n.sh             # report missing keys per language
 scripts/i18n.sh new de      # create an empty German file with all keys
 scripts/i18n.sh fill nl     # add only missing keys (empty) to Dutch
+scripts/preview.sh && build/preview build/PeakBar.app build/preview-de.png -previewLanguage de   # check a language
 ```
 
 ## Changelog

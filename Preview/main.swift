@@ -60,10 +60,12 @@ func render(_ view: some View, dark: Bool) -> NSImage {
 
 @MainActor
 func run() async {
-    let args = CommandLine.arguments
+    // Options such as -AppleLanguages "(de)" come after the positional arguments.
+    let args = Array(CommandLine.arguments.prefix { !$0.hasPrefix("-") })
     let bundle = Bundle(path: args[1])!
     let config = try! BundleConfigLoader(bundle: bundle).load()
-    let localizer = BundleLocalizer(bundle: bundle)
+    // -previewLanguage de renders the panels in that language; the README images stay English.
+    let localizer = BundleLocalizer(bundle: bundle, language: UserDefaults.standard.string(forKey: "previewLanguage"))
     let base = try! WeeklyPeakSchedule(config: config.peak)
 
     // One fixed moment for every image, so re-rendering only changes them when the design changes:

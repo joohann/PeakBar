@@ -10,8 +10,10 @@ final class BundleLocalizer: Localizing {
     private let bundle: Bundle
     private let fallback: Bundle?
 
-    init(bundle: Bundle = .main, fallbackLanguage: String = "en") {
-        self.bundle = bundle
+    /// `language` forces one language (used by the previews); nil follows the user's macOS language.
+    init(bundle: Bundle = .main, language: String? = nil, fallbackLanguage: String = "en") {
+        self.bundle = language.flatMap { bundle.path(forResource: $0, ofType: "lproj") }
+            .flatMap(Bundle.init(path:)) ?? bundle
         self.fallback = bundle.path(forResource: fallbackLanguage, ofType: "lproj").flatMap(Bundle.init(path:))
     }
 
