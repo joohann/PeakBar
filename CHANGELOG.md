@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.1
+
+### Fixed
+
+- **No more duplicate usage warnings.** The usage API sometimes reports the same reset as 00:59:59 and sometimes as 01:00:00, which PeakBar took for a new session and warned again. Reset times are now rounded to the minute.
+- **The card always opens on the front.** Closing the panel while the settings were showing used to leave the card turned over.
+
+### Changed
+
+- **New settings card.** Settings are grouped like System Settings, with an icon and a switch per row and a small menu for the minutes. All notifications are in one group; the status page link is on the front of the card only.
+- **Fewer notifications by default.** The session warning is now only sent at 90% (no longer also at 80%), and "Peak ending soon" (formerly "Peak hours end") and "When your session resets" are off by default. Existing settings are kept.
+- Clearer names for the two peak-end notifications: "Peak ending soon" and "Peak hours over".
+
 ## 1.2.0
 
 ### New

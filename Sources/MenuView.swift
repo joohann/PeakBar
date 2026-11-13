@@ -18,6 +18,11 @@ struct MenuView: View {
         .padding(14)
         .frame(width: 300)
         .rotation3DEffect(.degrees(angle), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
+        // Closing the panel turns the card back to the front, so it always opens on the status.
+        .background(PanelCloseObserver {
+            showsSettings = false
+            angle = 0
+        })
     }
 
     /// Turns the card over: rotate to the edge, swap faces, rotate back in.

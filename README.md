@@ -24,8 +24,8 @@ A tiny macOS menu bar app that shows whether it is currently **Claude peak hours
 - The gear flips the card over to the settings; refresh is an icon next to it
 
 **Notifications**
-- Before peak hours start and before they end (minutes ahead are adjustable), and when they have ended
-- Session warnings at 80% and 90%, and when your session resets
+- Before peak hours start and when they have ended; optionally also before they end (minutes ahead are adjustable)
+- A session warning at 90%, and optionally when your session resets
 - Weekly warnings at 75% and 90%, and when your pace runs out before the reset
 - Claude disruptions and their recovery
 
@@ -54,19 +54,19 @@ All settings are on the back of the card (gear icon).
 | Group | Setting | Default |
 | --- | --- | --- |
 | General | Open at login | off |
-| | Check for updates (with a **Check now** button) | on |
-| | Notify when an update is available | on |
+| | Updates: check once a day (with a **Check now** button) | on |
 | Menu bar | Show session usage | on |
 | | Show peak status | on |
 | | Only during peak hours | on |
 | | Ring at high weekly usage (80% orange, 90% red) | on |
-| Notify: peak hours | Before peak hours start (0 to 60 min, 0 = at the start) | on, 5 min |
-| | Before peak hours end (1 to 60 min) | on, 5 min |
-| | When peak hours have ended | on |
-| Notify: usage | Session warnings (80% and 90%) | on |
-| | When your session resets | on |
+| Notifications | Peak hours start (at the start or 1 to 60 min before) | on, 5 min |
+| | Peak ending soon (1 to 60 min before the end) | off, 5 min |
+| | Peak hours over | on |
+| | Session warning at 90% | on |
+| | When your session resets | off |
 | | Weekly limit warnings (75%, 90%, running out early) | on |
-| Notify: Claude status | Disruptions and recovery | on |
+| | Claude disruptions and recovery | on |
+| | New version available | on |
 
 Each warning is sent at most once per session or week. macOS asks once for permission to show notifications.
 

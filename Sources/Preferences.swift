@@ -10,12 +10,12 @@ struct AppSettings: Equatable {
     // Peak hours
     var notifyPeakStart = true
     var peakStartMinutes = 5      // 0 = at the start
-    var notifyPeakSoon = true
+    var notifyPeakSoon = false
     var peakSoonMinutes = 5
     var notifyPeakEnded = true
     // Usage
     var notifySession = true
-    var notifySessionReset = true
+    var notifySessionReset = false
     var notifyWeek = true
     // Claude status
     var notifyIncidents = true

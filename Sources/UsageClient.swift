@@ -110,6 +110,7 @@ struct OAuthUsageClient: UsageProviding {
         let trimmed = s.replacingOccurrences(of: #"\.\d+"#, with: "", options: .regularExpression)
         let f = ISO8601DateFormatter()
         f.formatOptions = [.withInternetDateTime]
-        return f.date(from: trimmed)
+        // Round to the minute: the API sometimes says 00:59:59.9 and sometimes 01:00:00 for the same reset.
+        return f.date(from: trimmed).map { Date(timeIntervalSince1970: ($0.timeIntervalSince1970 / 60).rounded() * 60) }
     }
 }

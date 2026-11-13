@@ -68,13 +68,13 @@ struct NotificationPlanner {
                                     body: l.t("notify.sessionReset.body"), date: reset)]
     }
 
-    /// Warns once at 80% and once at 90% per session window.
+    /// Warns once at 90% per session window.
     func sessionWarning(session: UsageWindow?, settings: AppSettings,
                         sent: Set<String>) -> (PlannedNotification?, Set<String>) {
         guard settings.notifySession, let session, let reset = session.resetsAt else { return (nil, sent) }
-        let window = String(Int(reset.timeIntervalSince1970))
+        let window = Self.windowKey(reset)
         let body = l.t("usage.resets", Formatters.reset(reset))
-        let due = [90, 80].filter { session.percent >= Double($0) }.map { threshold in
+        let due = [90].filter { session.percent >= Double($0) }.map { threshold in
             (key: "\(threshold)", note: PlannedNotification(
                 id: "session.\(threshold)",
                 title: l.t("notify.session.title", Formatters.percent(session.percent)),
@@ -88,7 +88,7 @@ struct NotificationPlanner {
     /// At most one weekly warning per fetch; every condition that holds is marked as sent.
     func weekWarning(pace: WeekPace?, settings: AppSettings, sent: Set<String>) -> (PlannedNotification?, Set<String>) {
         guard settings.notifyWeek, let pace else { return (nil, sent) }
-        let window = String(Int(pace.resetsAt.timeIntervalSince1970))
+        let window = Self.windowKey(pace.resetsAt)
         let percent = Formatters.percent(pace.used * 100)
 
         var due: [(key: String, note: PlannedNotification)] = []
@@ -122,6 +122,12 @@ struct NotificationPlanner {
     }
 
     // MARK: Helpers
+
+    /// Identifies a usage window by its reset time, rounded to 15 minutes, so a reset time that
+    /// shifts by a few seconds between fetches is not mistaken for a new window.
+    static func windowKey(_ reset: Date) -> String {
+        String(Int((reset.timeIntervalSince1970 / 900).rounded() * 900))
+    }
 
     /// Returns the first unsent warning; marks all due ones as sent and forgets earlier windows.
     private func pickFirst(_ due: [(key: String, note: PlannedNotification)], window: String,
