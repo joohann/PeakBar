@@ -40,12 +40,12 @@ English and Dutch, follows your macOS language. Native Swift, about 4 MB, Apple 
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/panel-ahead-dark.png">
-    <img src="docs/panel-ahead-light.png" width="300" alt="PeakBar panel during peak hours, with session and weekly usage">
+    <img src="docs/panel-ahead-light.png" width="380" alt="PeakBar panel during peak hours, with session and weekly usage">
   </picture>
   &nbsp;&nbsp;
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/panel-settings-dark.png">
-    <img src="docs/panel-settings-light.png" width="300" alt="PeakBar settings on the back of the card">
+    <img src="docs/panel-settings-light.png" width="380" alt="PeakBar settings on the back of the card">
   </picture>
 </p>
 
@@ -75,7 +75,7 @@ Each warning is sent at most once per session or week. macOS asks once for permi
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/panel-update-dark.png">
-    <img src="docs/panel-update-light.png" width="300" alt="PeakBar panel with a new version available and an Update button">
+    <img src="docs/panel-update-light.png" width="380" alt="PeakBar panel with a new version available and an Update button">
   </picture>
 </p>
 
@@ -134,7 +134,7 @@ Every release is signed with an EdDSA key; the app only installs updates that ca
 Releasing a new version:
 
 1. Set `version` in `config.json` and add a `## <version>` section to `CHANGELOG.md` (it becomes the release notes in the update dialog).
-2. Run `scripts/package.sh`. It builds the DMG and writes a signed `appcast.xml`.
+2. Run `scripts/package.sh`. It builds the DMG, writes a signed `appcast.xml` and renders the README images in `docs/`.
 3. Publish the GitHub release `v<version>` with the DMG.
 4. Commit and push `appcast.xml`. Only then do installed apps see the update.
 

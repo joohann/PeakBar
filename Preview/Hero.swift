@@ -10,6 +10,8 @@ struct DesktopView: View {
     let dark: Bool
     var showsSettings = false
     var size = CGSize(width: 960, height: 600)
+    /// Only the right-hand end of the menu bar, for the README panel images.
+    var compact = false
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -30,7 +32,7 @@ struct DesktopView: View {
             }
         }
         .frame(width: size.width, height: size.height)
-        .clipped()
+        .clipShape(RoundedRectangle(cornerRadius: compact ? 12 : 0, style: .continuous))
     }
 
     private var wallpaper: some View {
@@ -50,9 +52,11 @@ struct DesktopView: View {
     /// Full menu bar: Apple menu and Finder's menus on the left, status items and clock on the right.
     private var menuBar: some View {
         HStack(spacing: 16) {
-            Image(systemName: "apple.logo").font(.system(size: 14, weight: .medium))
-            Text("Finder").fontWeight(.bold)
-            ForEach(["File", "Edit", "View", "Go", "Window", "Help"], id: \.self) { Text($0) }
+            if !compact {
+                Image(systemName: "apple.logo").font(.system(size: 14, weight: .medium))
+                Text("Finder").fontWeight(.bold)
+                ForEach(["File", "Edit", "View", "Go", "Window", "Help"], id: \.self) { Text($0) }
+            }
             Spacer()
             MenuBarLabel(model: model, l: l)
                 .padding(.horizontal, 8).padding(.vertical, 2)

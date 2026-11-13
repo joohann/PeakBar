@@ -108,12 +108,15 @@ func run() async {
                 MenuBarLabel(model: model, l: localizer).padding(6)
                 MenuView(model: model, l: localizer, showsSettings: back)
             }.padding(8), dark: dark))
-            if args.count > 3, let last = row.last {
-                // Individual images for the README, e.g. docs/panel-ahead-dark.png
+            if args.count > 3 {
+                // README images: the panel under the right end of the menu bar, all the same size,
+                // on the same wallpaper as the laptop slides. E.g. docs/panel-ahead-dark.png
                 let name = names[row.count - 1]
                 let file = "\(args[3])/panel-\(name)-\(dark ? "dark" : "light").png"
-                let rep = NSBitmapImageRep(data: last.tiffRepresentation!)!
-                try! rep.representation(using: .png, properties: [:])!.write(to: URL(fileURLWithPath: file))
+                let scene = DesktopView(model: model, l: localizer, dark: dark, showsSettings: back,
+                                        size: CGSize(width: 500, height: 660), compact: true)
+                try! snapshot(scene, dark: dark).representation(using: .png, properties: [:])!
+                    .write(to: URL(fileURLWithPath: file))
             }
         }
         rows.append(row)

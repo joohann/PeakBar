@@ -11,6 +11,8 @@ IDENTITY=$(cfg signing.identity)
 PROFILE=$(cfg signing.notaryProfile)
 
 scripts/build.sh
+# README images and demo.gif, so every release shows the current design and version.
+scripts/preview.sh docs >/dev/null
 APP="build/$APP_NAME.app"
 DMG="build/$APP_NAME-$VERSION.dmg"
 STAGE=$(mktemp -d)
