@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- **Disruptions get a caution sign.** During a Claude disruption a yellow ⚠️ now stands before the dot in the menu bar, instead of the dot turning red. The dot keeps showing peak or off-peak, and is no longer confused with the red ring at 90% weekly usage.
+
+### Fixed
+
+- **Arabic reads right to left.** The panel and the settings are mirrored in Arabic, with the switches on the left and the bars filling from the right.
+
 ## 1.3.0
 
 ### New

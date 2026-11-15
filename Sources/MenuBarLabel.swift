@@ -2,14 +2,15 @@ import SwiftUI
 
 /// What sits in the menu bar itself: the coloured dot plus optional short text,
 /// e.g. "42% · Peak 2h 15m". The percentage is always the session; when weekly
-/// usage is high the dot gets an orange (80%) or red (90%) ring.
+/// usage is high the dot gets an orange (80%) or red (90%) ring, and during a
+/// Claude disruption a yellow caution triangle stands before the dot.
 struct MenuBarLabel: View {
     @ObservedObject var model: StatusModel
     let l: Localizing
 
     var body: some View {
         HStack(spacing: 4) {
-            Image(nsImage: MenuBarIcon.image(for: model.indicator, ring: ring))
+            Image(nsImage: MenuBarIcon.image(for: model.indicator, ring: ring, caution: model.hasIncident))
             if !text.isEmpty {
                 Text(text).monospacedDigit()
             }

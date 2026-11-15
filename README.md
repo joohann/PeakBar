@@ -23,7 +23,7 @@ A tiny macOS menu bar app that shows whether it is currently **Claude peak hours
 ## Features
 
 **Menu bar**
-- 🟢 off-peak, 🟠 peak hours, 🔴 Claude disruption
+- 🟢 off-peak, 🟠 peak hours, and a ⚠️ before the dot during a Claude disruption
 - Session percentage next to the dot, e.g. `42%`, and the peak countdown during peak hours: `42% · Peak 2h`
 - An orange ring around the dot at 80% weekly usage, red at 90%
 

@@ -4,7 +4,7 @@ import Combine
 /// Combines the peak schedule, live service status, usage and settings for the UI.
 @MainActor
 final class StatusModel: ObservableObject {
-    enum Indicator { case offPeak, peak, incident }
+    enum Indicator { case offPeak, peak }
 
     @Published private(set) var now: Date
     @Published private(set) var service: ServiceStatus?
@@ -58,10 +58,10 @@ final class StatusModel: ObservableObject {
     var window: LocalWindow? { schedule.localWindow(near: now) }
     var weekPace: WeekPace? { WeekPace(window: usage?.week, now: now) }
 
-    var indicator: Indicator {
-        if service?.level == .degraded { return .incident }
-        return peak.isPeak ? .peak : .offPeak
-    }
+    var indicator: Indicator { peak.isPeak ? .peak : .offPeak }
+
+    /// status.claude.com reports a disruption: a caution triangle appears next to the dot.
+    var hasIncident: Bool { service?.level == .degraded }
 
     /// Weekly usage is high enough to ring the dot in the menu bar (80% orange, 90% red).
     var weekRing: WeekPace.Level? {

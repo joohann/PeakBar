@@ -18,6 +18,7 @@ struct MenuView: View {
         .padding(14)
         .frame(width: 300)
         .rotation3DEffect(.degrees(angle), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
+        .environment(\.layoutDirection, l.isRightToLeft ? .rightToLeft : .leftToRight)
         // Closing the panel turns the card back to the front, so it always opens on the status.
         .background(PanelCloseObserver {
             showsSettings = false
