@@ -4,25 +4,25 @@ IMPORTANT: This file was signed by Sparkle. Any modifications to this file requi
   <channel>
     <title>PeakBar</title>
     <item>
-      <title>PeakBar 1.3.1</title>
-      <pubDate>Mon, 16 Nov 2026 16:35:08 +0000</pubDate>
-      <sparkle:version>1.3.1</sparkle:version>
-      <sparkle:shortVersionString>1.3.1</sparkle:shortVersionString>
+      <title>PeakBar 1.3.2</title>
+      <pubDate>Mon, 16 Nov 2026 19:31:47 +0000</pubDate>
+      <sparkle:version>1.3.2</sparkle:version>
+      <sparkle:shortVersionString>1.3.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>13.0</sparkle:minimumSystemVersion>
-      <sparkle:fullReleaseNotesLink>https://github.com/joohann/PeakBar/releases/tag/v1.3.1</sparkle:fullReleaseNotesLink>
+      <sparkle:fullReleaseNotesLink>https://github.com/joohann/PeakBar/releases/tag/v1.3.2</sparkle:fullReleaseNotesLink>
       <description sparkle:format="markdown"><![CDATA[
-### Changed
+### New
 
-- **Disruptions get a caution sign.** During a Claude disruption a yellow ⚠️ now stands before the dot in the menu bar, instead of the dot turning red. The dot keeps showing peak or off-peak, and is no longer confused with the red ring at 90% weekly usage.
+- **Show disruptions setting.** A switch under Menu bar hides the ⚠️ in the menu bar. Disruption notifications have their own switch, as before.
 
 ### Fixed
 
-- **Arabic reads right to left.** The panel and the settings are mirrored in Arabic, with the switches on the left and the bars filling from the right.
+- **Dutch labels fit.** "Sessie op 90%" and "Waarschuwing weeklimiet" are no longer cut off in the settings.
 ]]></description>
-      <enclosure url="https://github.com/joohann/PeakBar/releases/download/v1.3.1/PeakBar-1.3.1.dmg" type="application/octet-stream" sparkle:edSignature="thMGX8XTMI5cCoG7aTGg6FbNaGaKS99ctYkn5mdiVnficDqAUBYq5+EfCnvw36LoAknun8FY30/djT+OiZWjCg==" length="1916365"></enclosure>
+      <enclosure url="https://github.com/joohann/PeakBar/releases/download/v1.3.2/PeakBar-1.3.2.dmg" type="application/octet-stream" sparkle:edSignature="h+q3cz5U4KGM1noIb3qDotTv/R2yHuYlUxyvVlwNn73O5TAw/lDfpVnsVPJzSJXz2goSdZiVlxG+a93gagUcAA==" length="1916549"></enclosure>
     </item>
   </channel>
 </rss><!-- sparkle-signatures:
-edSignature: wxOvpt5BAAT6Yl/rYhCXI3BLInGPTSnd45eL1no7PQCmwg0I05ZboE6A/ylablAD5L69zADHfTtvACH1nHlHCQ==
-length: 1647
+edSignature: l1ProIagbc2g4rEFwrZ3A3Q81EOimZdQrcxQzyzrlFYHxByAHhEL52Tm/tbv4NNumnqYFcVtj90hdoLTJr4sBQ==
+length: 1488
 -->
