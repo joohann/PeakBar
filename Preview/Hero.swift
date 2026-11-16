@@ -51,7 +51,7 @@ struct DesktopView: View {
 
     /// Full menu bar: Apple menu and Finder's menus on the left, status items and clock on the right.
     private var menuBar: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: compact ? 12 : 16) {
             if !compact {
                 Image(systemName: "apple.logo").font(.system(size: 14, weight: .medium))
                 Text("Finder").fontWeight(.bold)
@@ -59,6 +59,7 @@ struct DesktopView: View {
             }
             Spacer()
             MenuBarLabel(model: model, l: l)
+                .fixedSize()  // never truncate the status item, as the real menu bar does
                 .padding(.horizontal, 8).padding(.vertical, 2)
                 .background(RoundedRectangle(cornerRadius: 5).fill(Color.white.opacity(0.22)))
             Image(systemName: "wifi").font(.system(size: 14, weight: .medium))
