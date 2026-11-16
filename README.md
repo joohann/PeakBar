@@ -71,6 +71,7 @@ All settings are on the back of the card (gear icon).
 | | Show peak status | on |
 | | Only during peak hours | on |
 | | Ring at high weekly usage (80% orange, 90% red) | on |
+| | Show disruptions (⚠️ before the dot) | on |
 | Notifications | Peak hours start (at the start or 1 to 60 min before) | on, 5 min |
 | | Peak ending soon (1 to 60 min before the end) | off, 5 min |
 | | Peak hours over | on |

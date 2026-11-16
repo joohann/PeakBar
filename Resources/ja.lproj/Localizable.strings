@@ -77,3 +77,4 @@
 "notify.update.body" = "クリックして新機能を確認し、アップデートします。";
 "settings.notifications" = "通知";
 "settings.minutes" = "%ld 分";
+"settings.showIncidents" = "障害を表示";

@@ -36,6 +36,8 @@ struct SettingsView: View {
                     enabled: model.settings.showMenuBarText)
                 SettingsDivider()
                 row("circle.circle", .red, "settings.warnWeek", \.warnWeekInMenuBar)
+                SettingsDivider()
+                row("exclamationmark.triangle", .yellow, "settings.showIncidents", \.showIncidentInMenuBar)
             }
             group("settings.notifications") {
                 row("sunrise", .orange, "settings.notifyPeakStart", \.notifyPeakStart,

@@ -77,3 +77,4 @@
 "notify.update.body" = "点击查看新内容并更新。";
 "settings.notifications" = "通知";
 "settings.minutes" = "%ld 分钟";
+"settings.showIncidents" = "显示故障";

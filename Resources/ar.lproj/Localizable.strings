@@ -77,3 +77,4 @@
 "notify.update.body" = "انقر لمعرفة الجديد والتحديث.";
 "settings.notifications" = "الإشعارات";
 "settings.minutes" = "%ld د";
+"settings.showIncidents" = "إظهار الأعطال";

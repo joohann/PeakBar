@@ -77,3 +77,4 @@
 "notify.update.body" = "Cliquez pour voir les nouveautés et mettre à jour.";
 "settings.notifications" = "Notifications";
 "settings.minutes" = "%ld min";
+"settings.showIncidents" = "Afficher les incidents";

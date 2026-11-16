@@ -77,3 +77,4 @@
 "notify.update.body" = "Yenilikleri görmek ve güncellemek için tıkla.";
 "settings.notifications" = "Bildirimler";
 "settings.minutes" = "%ld dk";
+"settings.showIncidents" = "Kesintileri göster";

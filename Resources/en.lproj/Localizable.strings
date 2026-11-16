@@ -77,3 +77,4 @@
 "notify.update.body" = "Click to see what is new and update.";
 "settings.notifications" = "Notifications";
 "settings.minutes" = "%ld min";
+"settings.showIncidents" = "Show disruptions";

@@ -10,7 +10,7 @@ struct MenuBarLabel: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            Image(nsImage: MenuBarIcon.image(for: model.indicator, ring: ring, caution: model.hasIncident))
+            Image(nsImage: MenuBarIcon.image(for: model.indicator, ring: ring, caution: model.showsIncidentInMenuBar))
             if !text.isEmpty {
                 Text(text).monospacedDigit()
             }

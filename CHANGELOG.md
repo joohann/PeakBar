@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### New
+
+- **Show disruptions setting.** A switch under Menu bar hides the ⚠️ in the menu bar. Disruption notifications have their own switch, as before.
+
+### Fixed
+
+- **Dutch labels fit.** "Sessie op 90%" and "Waarschuwing weeklimiet" are no longer cut off in the settings.
+
 ## 1.3.1
 
 ### Changed

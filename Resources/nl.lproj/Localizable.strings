@@ -39,7 +39,7 @@
 "settings.warnWeek" = "Ring bij hoog weekverbruik";
 "settings.notifyPeakSoon" = "Piek eindigt zo";
 "settings.notifyPeakEnded" = "Piekuren voorbij";
-"settings.notifyWeek" = "Waarschuwingen weeklimiet";
+"settings.notifyWeek" = "Waarschuwing weeklimiet";
 "settings.notificationsDenied" = "Meldingen staan uit voor deze app in Systeeminstellingen.";
 "week.reached" = "Weeklimiet bereikt tot %@";
 "week.runsOut" = "In dit tempo ben je op %@";
@@ -55,7 +55,7 @@
 "settings.peakOnlyDuringPeak" = "Alleen tijdens piekuren";
 "settings.notifyPeakStart" = "Piekuren beginnen";
 "settings.atStart" = "Bij de start";
-"settings.notifySession" = "Sessiewaarschuwing bij 90%";
+"settings.notifySession" = "Sessie op 90%";
 "settings.notifySessionReset" = "Als je sessie gereset is";
 "settings.notifyIncidents" = "Storingen bij Claude";
 "notify.peakStart.title" = "Piekuren beginnen over %ld min";
@@ -76,3 +76,4 @@
 "notify.update.body" = "Klik om te zien wat er nieuw is en bij te werken.";
 "settings.notifications" = "Meldingen";
 "settings.minutes" = "%ld min";
+"settings.showIncidents" = "Storingen tonen";

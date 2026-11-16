@@ -77,3 +77,4 @@
 "notify.update.body" = "Klik untuk melihat yang baru dan memperbarui.";
 "settings.notifications" = "Notifikasi";
 "settings.minutes" = "%ld mnt";
+"settings.showIncidents" = "Tampilkan gangguan";

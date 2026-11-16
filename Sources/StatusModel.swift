@@ -60,8 +60,8 @@ final class StatusModel: ObservableObject {
 
     var indicator: Indicator { peak.isPeak ? .peak : .offPeak }
 
-    /// status.claude.com reports a disruption: a caution triangle appears next to the dot.
-    var hasIncident: Bool { service?.level == .degraded }
+    /// status.claude.com reports a disruption and the user wants to see it: a caution triangle before the dot.
+    var showsIncidentInMenuBar: Bool { settings.showIncidentInMenuBar && service?.level == .degraded }
 
     /// Weekly usage is high enough to ring the dot in the menu bar (80% orange, 90% red).
     var weekRing: WeekPace.Level? {

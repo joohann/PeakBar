@@ -7,6 +7,7 @@ struct AppSettings: Equatable {
     var peakTextOnlyDuringPeak = true
     var showMenuBarUsage = true
     var warnWeekInMenuBar = true
+    var showIncidentInMenuBar = true
     // Peak hours
     var notifyPeakStart = true
     var peakStartMinutes = 5      // 0 = at the start
@@ -49,6 +50,7 @@ final class UserDefaultsPreferences: PreferencesStoring {
         ("peakTextOnlyDuringPeak", \.peakTextOnlyDuringPeak),
         ("showMenuBarUsage", \.showMenuBarUsage),
         ("warnWeekInMenuBar", \.warnWeekInMenuBar),
+        ("showIncidentInMenuBar", \.showIncidentInMenuBar),
         ("notifyPeakStart", \.notifyPeakStart),
         ("notifyPeakSoon", \.notifyPeakSoon),
         ("notifyPeakEnded", \.notifyPeakEnded),
