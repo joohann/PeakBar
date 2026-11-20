@@ -20,7 +20,11 @@ struct AppConfig: Decodable {
         let pageUrl: URL
         let pollSeconds: Double
     }
+    struct ClaudeApp: Decodable {
+        let bundleIds: [String]   // the Claude desktop app(s) the peak-hours launch warning watches
+    }
     let appName: String
+    let claudeApp: ClaudeApp
     let peak: Peak
     let status: Status
     let usage: Usage

@@ -21,6 +21,7 @@ final class StubPreferences: PreferencesStoring {
     var sentWeekWarnings: Set<String> = []
     var sentSessionWarnings: Set<String> = []
     var notifiedUpdateVersion: String?
+    var launchWarningSilencedDay: String?
     func load() -> AppSettings { settings }
     func save(_ s: AppSettings) { settings = s }
 }

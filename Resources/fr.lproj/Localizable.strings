@@ -78,3 +78,10 @@
 "settings.notifications" = "Notifications";
 "settings.minutes" = "%ld min";
 "settings.showIncidents" = "Afficher les incidents";
+"settings.claudeApp" = "App Claude aux heures de pointe";
+"settings.warnClaudeLaunch" = "Avertir à l’ouverture";
+"guard.title" = "Heures de pointe jusqu’à %@";
+"guard.body" = "Votre limite de session baisse plus vite maintenant. Voulez-vous vraiment utiliser %@ ?";
+"guard.quit" = "Quitter %@";
+"guard.keepOpen" = "Ouvrir quand même";
+"guard.silenceToday" = "Ne plus demander aujourd’hui";

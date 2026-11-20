@@ -78,3 +78,10 @@
 "settings.notifications" = "通知";
 "settings.minutes" = "%ld 分";
 "settings.showIncidents" = "障害を表示";
+"settings.claudeApp" = "ピーク時の Claude アプリ";
+"settings.warnClaudeLaunch" = "開くときに警告";
+"guard.title" = "%@ までピーク時間です";
+"guard.body" = "現在はセッション上限の消費が速くなっています。%@ を使用しますか？";
+"guard.quit" = "%@ を終了";
+"guard.keepOpen" = "このまま開く";
+"guard.silenceToday" = "今日はもう確認しない";

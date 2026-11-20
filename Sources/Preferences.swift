@@ -20,6 +20,8 @@ struct AppSettings: Equatable {
     var notifyWeek = true
     // Claude status
     var notifyIncidents = true
+    // Claude app
+    var warnClaudeLaunch = false
     // Updates
     var checkForUpdates = true
     var notifyUpdate = true
@@ -39,6 +41,8 @@ protocol PreferencesStoring: AnyObject {
     var sentSessionWarnings: Set<String> { get set }
     /// The last version an update notification was posted for, so each version notifies once.
     var notifiedUpdateVersion: String? { get set }
+    /// The local day ("2026-11-23") on which the Claude launch warning was silenced.
+    var launchWarningSilencedDay: String? { get set }
 }
 
 final class UserDefaultsPreferences: PreferencesStoring {
@@ -58,6 +62,7 @@ final class UserDefaultsPreferences: PreferencesStoring {
         ("notifySessionReset", \.notifySessionReset),
         ("notifyWeek", \.notifyWeek),
         ("notifyIncidents", \.notifyIncidents),
+        ("warnClaudeLaunch", \.warnClaudeLaunch),
         ("checkForUpdates", \.checkForUpdates),
         ("notifyUpdate", \.notifyUpdate),
     ]
@@ -69,6 +74,7 @@ final class UserDefaultsPreferences: PreferencesStoring {
         static let sentWeekWarnings = "sentWeekWarnings"
         static let sentSessionWarnings = "sentSessionWarnings"
         static let notifiedUpdateVersion = "notifiedUpdateVersion"
+        static let launchWarningSilencedDay = "launchWarningSilencedDay"
     }
     private let defaults: UserDefaults
 
@@ -108,5 +114,10 @@ final class UserDefaultsPreferences: PreferencesStoring {
     var notifiedUpdateVersion: String? {
         get { defaults.string(forKey: Key.notifiedUpdateVersion) }
         set { defaults.set(newValue, forKey: Key.notifiedUpdateVersion) }
+    }
+
+    var launchWarningSilencedDay: String? {
+        get { defaults.string(forKey: Key.launchWarningSilencedDay) }
+        set { defaults.set(newValue, forKey: Key.launchWarningSilencedDay) }
     }
 }

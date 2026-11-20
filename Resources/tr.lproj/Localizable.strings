@@ -78,3 +78,10 @@
 "settings.notifications" = "Bildirimler";
 "settings.minutes" = "%ld dk";
 "settings.showIncidents" = "Kesintileri göster";
+"settings.claudeApp" = "Yoğun saatlerde Claude uygulaması";
+"settings.warnClaudeLaunch" = "Açarken uyar";
+"guard.title" = "Yoğun saatler %@ saatine kadar";
+"guard.body" = "Oturum limitin şu an daha hızlı azalıyor. %@ uygulamasını kullanmak istediğinden emin misin?";
+"guard.quit" = "%@ uygulamasından çık";
+"guard.keepOpen" = "Yine de aç";
+"guard.silenceToday" = "Bugün tekrar sorma";

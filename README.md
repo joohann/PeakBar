@@ -41,6 +41,9 @@ A tiny macOS menu bar app that shows whether it is currently **Claude peak hours
 - Weekly warnings at 75% and 90%, and when your pace runs out before the reset
 - Claude disruptions and their recovery
 
+**Claude app during peak hours** (optional)
+- When you open the Claude desktop app during peak hours, PeakBar asks whether you really want to use it now. **Quit Claude** closes it again, **Open anyway** keeps it, and you can silence the question for the rest of the day. macOS cannot stop an app before it starts, so Claude is briefly visible. Claude Code in the terminal and claude.ai in the browser are not affected.
+
 **Updates**
 - Checks GitHub once a day for a new version, notifies you and shows an **Update** button on the card
 - Downloads, verifies and installs the new version, then restarts. Powered by [Sparkle](https://sparkle-project.org)
@@ -80,6 +83,7 @@ All settings are on the back of the card (gear icon).
 | | Weekly limit warnings (75%, 90%, running out early) | on |
 | | Claude disruptions and recovery | on |
 | | New version available | on |
+| Claude app during peak hours | Warn when opening: quit Claude or open it anyway, optionally not again today | off |
 
 Each warning is sent at most once per session or week. macOS asks once for permission to show notifications.
 

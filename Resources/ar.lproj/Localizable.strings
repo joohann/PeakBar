@@ -78,3 +78,10 @@
 "settings.notifications" = "الإشعارات";
 "settings.minutes" = "%ld د";
 "settings.showIncidents" = "إظهار الأعطال";
+"settings.claudeApp" = "تطبيق Claude في ساعات الذروة";
+"settings.warnClaudeLaunch" = "التحذير عند الفتح";
+"guard.title" = "ساعات الذروة حتى %@";
+"guard.body" = "حد الجلسة يُستهلك أسرع الآن. هل تريد بالتأكيد استخدام %@؟";
+"guard.quit" = "إنهاء %@";
+"guard.keepOpen" = "الفتح على أي حال";
+"guard.silenceToday" = "لا تسأل مرة أخرى اليوم";

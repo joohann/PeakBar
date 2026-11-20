@@ -78,3 +78,10 @@
 "settings.notifications" = "Notifikasi";
 "settings.minutes" = "%ld mnt";
 "settings.showIncidents" = "Tampilkan gangguan";
+"settings.claudeApp" = "Aplikasi Claude saat jam sibuk";
+"settings.warnClaudeLaunch" = "Peringatkan saat dibuka";
+"guard.title" = "Jam sibuk hingga %@";
+"guard.body" = "Batas sesi Anda kini berkurang lebih cepat. Yakin ingin menggunakan %@?";
+"guard.quit" = "Keluar dari %@";
+"guard.keepOpen" = "Tetap buka";
+"guard.silenceToday" = "Jangan tanya lagi hari ini";

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### New
+
+- **Think twice before opening Claude during peak hours.** An optional setting (off by default) asks, when you open the Claude desktop app during peak hours, whether you want to use it now. Quit it again, open it anyway, or silence the question for the rest of the day.
+
 ## 1.3.2
 
 ### New

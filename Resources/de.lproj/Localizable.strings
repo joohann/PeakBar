@@ -78,3 +78,10 @@
 "settings.notifications" = "Mitteilungen";
 "settings.minutes" = "%ld Min.";
 "settings.showIncidents" = "Störungen anzeigen";
+"settings.claudeApp" = "Claude-App zur Spitzenzeit";
+"settings.warnClaudeLaunch" = "Beim Öffnen warnen";
+"guard.title" = "Spitzenzeit bis %@";
+"guard.body" = "Dein Sitzungslimit sinkt jetzt schneller. Möchtest du %@ wirklich verwenden?";
+"guard.quit" = "%@ beenden";
+"guard.keepOpen" = "Trotzdem öffnen";
+"guard.silenceToday" = "Heute nicht mehr fragen";

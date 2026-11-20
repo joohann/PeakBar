@@ -5,4 +5,5 @@ enum Log {
     private static let subsystem = Bundle.main.bundleIdentifier ?? "app"
     static let usage = Logger(subsystem: subsystem, category: "usage")
     static let update = Logger(subsystem: subsystem, category: "update")
+    static let launch = Logger(subsystem: subsystem, category: "launch")
 }

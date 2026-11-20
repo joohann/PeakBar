@@ -77,3 +77,10 @@
 "settings.notifications" = "Meldingen";
 "settings.minutes" = "%ld min";
 "settings.showIncidents" = "Storingen tonen";
+"settings.claudeApp" = "Claude-app tijdens piekuren";
+"settings.warnClaudeLaunch" = "Waarschuw bij openen";
+"guard.title" = "Het is piekuur tot %@";
+"guard.body" = "Je sessielimiet loopt nu sneller op. Weet je zeker dat je %@ wilt gebruiken?";
+"guard.quit" = "%@ sluiten";
+"guard.keepOpen" = "Toch openen";
+"guard.silenceToday" = "Vandaag niet meer vragen";

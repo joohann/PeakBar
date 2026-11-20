@@ -4,12 +4,14 @@ import SwiftUI
 struct MenuBarApp: App {
     @StateObject private var model: StatusModel
     private let localizer: Localizing
+    private let launchGuard: ClaudeLaunchGuard
 
     init() {
         do {
             let config = try BundleConfigLoader().load()
             let schedule = try WeeklyPeakSchedule(config: config.peak)
             let localizer = BundleLocalizer()
+            let preferences = UserDefaultsPreferences()
             let model = StatusModel(
                 config: config,
                 schedule: schedule,
@@ -22,13 +24,21 @@ struct MenuBarApp: App {
                     refresher: ClaudeCLIRefresher(candidatePaths: config.usage.cliPaths)
                 ),
                 loginItem: MainAppLoginItem(),
-                preferences: UserDefaultsPreferences(),
+                preferences: preferences,
                 notifier: UserNotificationService(),
                 planner: NotificationPlanner(schedule: schedule, l: localizer),
                 updater: SparkleUpdater()
             )
             _model = StateObject(wrappedValue: model)
             self.localizer = localizer
+            launchGuard = ClaudeLaunchGuard(
+                bundleIds: Set(config.claudeApp.bundleIds),
+                schedule: schedule,
+                settings: { model.settings },
+                preferences: preferences,
+                warning: AlertLaunchWarning(l: localizer)
+            )
+            launchGuard.start()
         } catch {
             fatalError("Invalid config.json: \(error)")
         }

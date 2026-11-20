@@ -59,6 +59,9 @@ struct SettingsView: View {
                 row("sparkles", .blue, "settings.notifyUpdate", \.notifyUpdate,
                     enabled: model.settings.checkForUpdates)
             }
+            group("settings.claudeApp") {
+                row("hand.raised", .orange, "settings.warnClaudeLaunch", \.warnClaudeLaunch)
+            }
             if model.notificationsDenied && model.settings.wantsNotifications {
                 Text(l.t("settings.notificationsDenied")).font(.caption).foregroundStyle(.orange)
                     .padding(.top, 6)

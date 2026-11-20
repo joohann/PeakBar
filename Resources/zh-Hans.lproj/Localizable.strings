@@ -78,3 +78,10 @@
 "settings.notifications" = "通知";
 "settings.minutes" = "%ld 分钟";
 "settings.showIncidents" = "显示故障";
+"settings.claudeApp" = "高峰时段的 Claude 应用";
+"settings.warnClaudeLaunch" = "打开时提醒";
+"guard.title" = "高峰时段持续到 %@";
+"guard.body" = "现在会话限额消耗更快。确定要使用 %@ 吗？";
+"guard.quit" = "退出 %@";
+"guard.keepOpen" = "仍然打开";
+"guard.silenceToday" = "今天不再询问";
